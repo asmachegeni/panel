@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import { RoutePrivate } from "./components/RoutePrivate";
 import { Files } from "./pages/Files";
 import { Home } from "./pages/Home";
+import AppLayout from "./components/AppLayout";
 interface Route {
   path: string;
   element: ReactNode;
@@ -12,7 +13,9 @@ const routes: Route[] = [
     path: "/",
     element: (
       <RoutePrivate>
-        <Home />
+        <AppLayout>
+          <Home />
+        </AppLayout>
       </RoutePrivate>
     ),
   },
@@ -20,7 +23,9 @@ const routes: Route[] = [
     path: "/files",
     element: (
       <RoutePrivate>
-        <Files />
+        <AppLayout>
+          <Files />
+        </AppLayout>
       </RoutePrivate>
     ),
   },
