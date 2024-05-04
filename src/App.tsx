@@ -1,10 +1,17 @@
 import { useRoutes } from "react-router-dom";
 import routes from "./routes";
 import "./App.css";
-import AuthContext from "./contexts/authContext";
-import { createTheme, ThemeProvider } from "@mui/material";
+import AuthContext from "./contexts/authcontext/authContext";
+import { ThemeProvider } from "@mui/material";
+import createTheme from "@mui/material/styles/createTheme";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import rtlPlugin from "stylis-plugin-rtl";
+import { prefixer } from "stylis";
+
 function App() {
   const theme = createTheme({
+    direction: "rtl",
     typography: {
       fontFamily: ["vazirmatn"].join(","),
     },
@@ -33,15 +40,21 @@ function App() {
       },
     },
   });
+  const cacheRtl = createCache({
+    key: "muirtl",
+    stylisPlugins: [prefixer, rtlPlugin],
+  });
   const router = useRoutes(routes);
   return (
-    <ThemeProvider theme={theme}>
-      <AuthContext.Provider
-        value={{ isLogged: true, login: () => {}, logout: () => {} }}
-      >
-        {router}
-      </AuthContext.Provider>
-    </ThemeProvider>
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        <AuthContext.Provider
+          value={{ isLogged: true, login: () => {}, logout: () => {} }}
+        >
+          {router}
+        </AuthContext.Provider>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 

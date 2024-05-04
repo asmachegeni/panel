@@ -20,7 +20,7 @@ const AppBar = styled(
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  background: theme.palette.primary.main,
+  background: "#fafafa",
 }));
 
 export const Navbar = () => {
@@ -60,14 +60,12 @@ export const Navbar = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
+      <AppBar position="absolute">
         <Toolbar>
+          <Box component="img" sx={{ height: 40 }} alt="Logo" src={logo} />
+          <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
+            <IconButton size="large" aria-label="show 17 new notifications">
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
@@ -79,14 +77,10 @@ export const Navbar = () => {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
             >
               <AccountCircle />
             </IconButton>
           </Box>
-          <Box sx={{ flexGrow: 1 }} />
-
-          <Box component="img" sx={{ height: 40 }} alt="Logo" src={logo} />
         </Toolbar>
       </AppBar>
       {renderMenu}

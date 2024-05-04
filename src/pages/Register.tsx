@@ -10,11 +10,10 @@ import img from "./../assets/img/login.svg";
 import useForm from "../hooks/useForm";
 import AuthService from "../services/auth.service";
 import { Bounce, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { NavLink } from "react-router-dom";
-const Login = () => {
-  const theme = useTheme();
 
+const Register: React.FC = () => {
+  const theme = useTheme();
   const [inputs, dispatch] = useForm();
   return (
     <>
@@ -66,13 +65,29 @@ const Login = () => {
           >
             <Grid item>
               <TextField
+                label="نام"
+                variant="outlined"
+                sx={{ width: "300px", borderRadius: "8px" }}
+                value={inputs.name.value}
+                error={!inputs.name.isValid}
+                required
+                onChange={(e) =>
+                  dispatch({ type: "NAME", field: e.target.value })
+                }
+                helperText={
+                  !inputs.name.isValid ? " نام وارد شده معتبر نیست" : ""
+                }
+              />
+            </Grid>
+            <Grid item>
+              <TextField
                 label="ایمیل"
                 variant="outlined"
                 sx={{ width: "300px", borderRadius: "8px" }}
                 value={inputs.email.value}
                 error={!inputs.email.isValid}
                 required
-                onChange={(e: { target: { value: any } }) =>
+                onChange={(e) =>
                   dispatch({ type: "EMAIL", field: e.target.value })
                 }
                 helperText={
@@ -88,7 +103,7 @@ const Login = () => {
                 value={inputs.password.value}
                 error={!inputs.password.isValid}
                 required
-                onChange={(e: { target: { value: any } }) =>
+                onChange={(e) =>
                   dispatch({ type: "PASSWORD", field: e.target.value })
                 }
                 helperText={
@@ -105,19 +120,20 @@ const Login = () => {
                 size="large"
                 color="info"
                 sx={{ width: "300px", borderRadius: "8px" }}
-                disabled={!inputs.email.isValid || !inputs.password.isValid}
-                onClick={() =>
-                  AuthService.login({
-                    email: inputs.email.value,
-                    password: inputs.password.value,
-                  })
+                disabled={
+                  !inputs.email.isValid ||
+                  !inputs.password.isValid ||
+                  !inputs.name.isValid
                 }
+                onClick={() => AuthService.register(inputs)}
               >
-                ورود
+                ثبت نام
               </Button>
             </Grid>
             <Grid>
-              <Typography>حساب کاربری ندارید؟ <NavLink to={'/register'}>ثبت نام کنید</NavLink></Typography>
+              <Typography>
+                حساب کاربری دارید؟ <NavLink to={"/login"}> وارد شوید</NavLink>
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -157,4 +173,4 @@ const Login = () => {
     </>
   );
 };
-export default Login;
+export default Register;
