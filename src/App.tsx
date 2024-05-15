@@ -8,6 +8,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
+import { useState } from "react";
 
 function App() {
   const theme = createTheme({
@@ -45,12 +46,11 @@ function App() {
     stylisPlugins: [prefixer, rtlPlugin],
   });
   const router = useRoutes(routes);
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
-        <AuthContext.Provider
-          value={{ isLogged: true, login: () => {}, logout: () => {} }}
-        >
+        <AuthContext.Provider value={{ token, setToken }}>
           {router}
         </AuthContext.Provider>
       </ThemeProvider>

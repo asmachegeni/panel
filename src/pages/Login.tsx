@@ -9,13 +9,18 @@ import {
 import img from "./../assets/img/login.svg";
 import useForm from "../hooks/useForm";
 import AuthService from "../services/auth.service";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../contexts/authcontext/authContext";
 const Login = () => {
   const theme = useTheme();
 
   const [inputs, dispatch] = useForm();
+  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
+
   return (
     <>
       <CssBaseline />
@@ -111,13 +116,47 @@ const Login = () => {
                     email: inputs.email.value,
                     password: inputs.password.value,
                   })
+                    .then((res: any) => {
+                      if (res.status === 200) {
+                        localStorage.setItem("token", res.data.accessToken);
+                        authContext.setToken(res.data.accessToken);
+                        toast.success("با موفقیت وارد شدید!", {
+                          position: "top-left",
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "light",
+                          transition: Bounce,
+                        });
+                        navigate("/");
+                      }
+                    })
+                    .catch(() => {
+                      toast.error("نام کاربری یا رمز عبور اشتباه است.", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Bounce,
+                      });
+                    })
                 }
               >
                 ورود
               </Button>
             </Grid>
             <Grid>
-              <Typography>حساب کاربری ندارید؟ <NavLink to={'/register'}>ثبت نام کنید</NavLink></Typography>
+              <Typography>
+                حساب کاربری ندارید؟{" "}
+                <NavLink to={"/register"}>ثبت نام کنید</NavLink>
+              </Typography>
             </Grid>
           </Grid>
         </Grid>

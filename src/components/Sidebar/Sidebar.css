@@ -28,6 +28,7 @@
   list-style: none;
   height: 54px;
   transition: all 0.3s;
+  cursor: pointer;
 }
 .sidebar-link {
   text-decoration: none;
@@ -48,6 +49,7 @@
   gap: 10px;
   transition: all 0.3s;
   margin-right: -6px;
+  cursor: pointer;
 }
 .sidebar-link:hover,
 .sidebar-list-item > button:hover {

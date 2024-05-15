@@ -1,5 +1,4 @@
 export interface AuthType {
-  isLogged: boolean;
-  login: ()=>void;
-  logout: ()=>void;
+  token: string | null;
+  setToken: any;
 }

@@ -9,12 +9,16 @@ import {
 import img from "./../assets/img/login.svg";
 import useForm from "../hooks/useForm";
 import AuthService from "../services/auth.service";
-import { Bounce, ToastContainer } from "react-toastify";
-import { NavLink } from "react-router-dom";
-
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../contexts/authcontext/authContext";
 const Register: React.FC = () => {
   const theme = useTheme();
   const [inputs, dispatch] = useForm();
+  const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
+
   return (
     <>
       <CssBaseline />
@@ -125,7 +129,44 @@ const Register: React.FC = () => {
                   !inputs.password.isValid ||
                   !inputs.name.isValid
                 }
-                onClick={() => AuthService.register(inputs)}
+                onClick={() =>
+                  AuthService.register({
+                    name: inputs.name.value,
+                    email: inputs.email.value,
+                    password: inputs.password.value,
+                  })
+                    .then((res: any) => {
+                      if (res.status == "201") {
+                        localStorage.setItem("token", res.data.accessToken);
+                        authContext.setToken(res.data.accessToken);
+                        toast.success("ثبت نام شما با موفقیت انجام شد!", {
+                          position: "top-left",
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "light",
+                          transition: Bounce,
+                        });
+                        navigate("/");
+                      }
+                    })
+                    .catch((err: any) => {
+                      toast.error(err.response.data.message, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        transition: Bounce,
+                      });
+                    })
+                }
               >
                 ثبت نام
               </Button>
