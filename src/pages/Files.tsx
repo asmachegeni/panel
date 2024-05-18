@@ -23,6 +23,7 @@ import { DropFile } from "../components/DropFile";
 import { Bounce, ToastContainer } from "react-toastify";
 import FilesService from "../services/files.service";
 import { blue, red } from "@mui/material/colors";
+import { Loader } from "../components/Loader";
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -46,17 +47,18 @@ export default function Files() {
   });
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
-
+  const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
+    setIsPending(true);
     FilesService.getAllExcel(pageNumber, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res: any) => {
+      setIsPending(false);
       setRows(res.data.data.data);
       setPageSize(res.data.data.per_page);
       setLastPage(res.data.data.last_page);
-      console.log(res.data.data.per_page, res.data.data.last_page);
     });
   };
   React.useEffect(() => {
@@ -213,6 +215,7 @@ export default function Files() {
         width: "100%",
       }}
     >
+      <Loader open={isPending} handleClose={() => {}} />
       <ToastContainer
         position="top-left"
         autoClose={5000}

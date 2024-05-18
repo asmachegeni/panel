@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   CssBaseline,
   Grid,
   TextField,
@@ -12,12 +13,13 @@ import AuthService from "../services/auth.service";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../contexts/authcontext/authContext";
+
 const Login = () => {
   const theme = useTheme();
-
   const [inputs, dispatch] = useForm();
+  const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
@@ -106,17 +108,21 @@ const Login = () => {
             </Grid>
             <Grid>
               <Button
+                type="submit"
                 variant="contained"
                 size="large"
                 color="info"
                 sx={{ width: "300px", borderRadius: "8px" }}
                 disabled={!inputs.email.isValid || !inputs.password.isValid}
-                onClick={() =>
+                onClick={() => {
+                  setIsPending(true);
+
                   AuthService.login({
                     email: inputs.email.value,
                     password: inputs.password.value,
                   })
                     .then((res: any) => {
+                      setIsPending(false);
                       if (res.status === 200) {
                         localStorage.setItem("token", res.data.accessToken);
                         authContext.setToken(res.data.accessToken);
@@ -135,7 +141,8 @@ const Login = () => {
                       }
                     })
                     .catch(() => {
-                      toast.error("نام کاربری یا رمز عبور اشتباه است.", {
+                      setIsPending(false);
+                      toast.error("نام کاربری یا رمز عبور اشتباه است", {
                         position: "top-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -146,15 +153,25 @@ const Login = () => {
                         theme: "light",
                         transition: Bounce,
                       });
-                    })
-                }
+                    });
+                }}
               >
-                ورود
+                {isPending ? (
+                  <CircularProgress
+                    size={28}
+                    sx={{
+                      color: "#ccc",
+                    }}
+                  />
+                ) : (
+                  "ورود"
+                )}
               </Button>
             </Grid>
+
             <Grid>
               <Typography>
-                حساب کاربری ندارید؟{" "}
+                حساب کاربری ندارید؟
                 <NavLink to={"/register"}>ثبت نام کنید</NavLink>
               </Typography>
             </Grid>

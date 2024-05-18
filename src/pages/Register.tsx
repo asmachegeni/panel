@@ -1,6 +1,7 @@
 import {
   Button,
   CssBaseline,
+  CircularProgress,
   Grid,
   TextField,
   Typography,
@@ -11,11 +12,12 @@ import useForm from "../hooks/useForm";
 import AuthService from "../services/auth.service";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../contexts/authcontext/authContext";
 const Register: React.FC = () => {
   const theme = useTheme();
   const [inputs, dispatch] = useForm();
+  const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
@@ -120,6 +122,7 @@ const Register: React.FC = () => {
             </Grid>
             <Grid>
               <Button
+                type="submit"
                 variant="contained"
                 size="large"
                 color="info"
@@ -129,13 +132,15 @@ const Register: React.FC = () => {
                   !inputs.password.isValid ||
                   !inputs.name.isValid
                 }
-                onClick={() =>
+                onClick={() => {
+                  setIsPending(true);
                   AuthService.register({
                     name: inputs.name.value,
                     email: inputs.email.value,
                     password: inputs.password.value,
                   })
                     .then((res: any) => {
+                      setIsPending(false);
                       if (res.status == "201") {
                         localStorage.setItem("token", res.data.accessToken);
                         authContext.setToken(res.data.accessToken);
@@ -154,6 +159,7 @@ const Register: React.FC = () => {
                       }
                     })
                     .catch((err: any) => {
+                      setIsPending(false);
                       toast.error(err.response.data.message, {
                         position: "top-right",
                         autoClose: 5000,
@@ -165,10 +171,19 @@ const Register: React.FC = () => {
                         theme: "light",
                         transition: Bounce,
                       });
-                    })
-                }
+                    });
+                }}
               >
-                ثبت نام
+                {isPending ? (
+                  <CircularProgress
+                    size={28}
+                    sx={{
+                      color: "#ccc",
+                    }}
+                  />
+                ) : (
+                  "ثبت نام"
+                )}
               </Button>
             </Grid>
             <Grid>
