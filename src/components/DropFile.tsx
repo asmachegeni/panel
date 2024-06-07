@@ -40,7 +40,6 @@ export const DropFile = ({ refresh }: { refresh: any }) => {
     isDragAccept,
     isDragReject,
   } = useDropzone();
-  console.log(acceptedFiles[0]);
   const style = useMemo(
     () => ({
       ...baseStyle,
@@ -56,7 +55,6 @@ export const DropFile = ({ refresh }: { refresh: any }) => {
         <>
           <button
             onClick={() => {
-              console.log(acceptedFiles[0]);
               FilesService.post(
                 { file: acceptedFiles[0] },
                 {

@@ -96,7 +96,10 @@ const Login = () => {
                 error={!inputs.password.isValid}
                 required
                 onChange={(e: { target: { value: any } }) =>
-                  dispatch({ type: "PASSWORD", field: e.target.value })
+                  dispatch({
+                    type: "PASSWORD",
+                    field: e.target.value,
+                  })
                 }
                 helperText={
                   !inputs.password.isValid

@@ -1,8 +1,8 @@
 import { createContext } from "react";
 import { AuthType } from "./authContext.types";
 const values: AuthType = {
-  isLogged: false,
-  setIsLogged: () => {},
+  // isLogged: false,
+  // setIsLogged: () => {},
   //   login: () => {},
   //   logout: () => {},
   token: "",

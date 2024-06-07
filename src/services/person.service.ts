@@ -7,8 +7,8 @@ const PersonService = {
   add(data: any, headers: any) {
     return Axios.post("person", data, headers);
   },
-  update(data: any, headers: any) {
-    return Axios.patch("person", data, headers);
+  update(data: any, id: number, headers: any) {
+    return Axios.put(`person/${id}`, data, headers);
   },
   delete(id: any, headers: any) {
     return Axios.delete(`person/${id}`, headers);
