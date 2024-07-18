@@ -6,12 +6,17 @@ import "./Sidebar.css";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PeopleIcon from '@mui/icons-material/People';
+import PowerIcon from '@mui/icons-material/Power';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import ChairIcon from '@mui/icons-material/Chair';
 import { useState } from "react";
 import swal from "sweetalert";
-import AuthService from "../../services/auth.service";
 import { Bounce, toast } from "react-toastify";
 import { useContext } from "react";
 import AuthContext from "../../contexts/authcontext/authContext";
+import AuthService from "../../modules/login/auth.service";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -27,6 +32,31 @@ export const Sidebar = () => {
       text: "مدیریت فایل ها",
       icon: <FolderIcon />,
       link: "/files",
+    },
+    {
+      text: "  تنظیمات",
+      icon: <SettingsIcon />,
+      link: "/setting",
+    },
+    {
+      text: "  افراد",
+      icon: <PeopleIcon />,
+      link: "/people",
+    },
+    {
+      text: "  سوکت ها",
+      icon: <PowerIcon />,
+      link: "/sockets",
+    },
+    {
+      text: "  مکان ها",
+      icon: <ApartmentIcon />,
+      link: "/places",
+    },
+    {
+      text: "  سمت ها",
+      icon: <ChairIcon />,
+      link: "/positions",
     },
   ];
   const linkClasss = ({ isActive }: { isActive: boolean }): string =>

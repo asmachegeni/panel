@@ -1,8 +1,5 @@
-import Axios from "../baseUrl";
+import Axios from "../../baseUrl";
 const AuthService = {
-  register(data: any) {
-    return Axios.post("auth/signup", data);
-  },
   login(data: any) {
     return Axios.post("auth/signin", data);
   },

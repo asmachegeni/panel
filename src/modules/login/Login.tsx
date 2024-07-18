@@ -1,22 +1,33 @@
 import {
   Button,
-  CssBaseline,
   CircularProgress,
+  CssBaseline,
   Grid,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import img from "./../assets/img/login.svg";
-import useForm from "../hooks/useForm";
-import AuthService from "../services/auth.service";
+import img from "./../../assets/img/login.svg";
+import useForm from "../../hooks/useForm";
+import AuthService from "./auth.service";
 import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import AuthContext from "../contexts/authcontext/authContext";
-const Register: React.FC = () => {
+import AuthContext from "../../contexts/authcontext/authContext";
+import { ILogin, validate } from "./Login.types";
+
+const Login = () => {
   const theme = useTheme();
-  const [inputs, dispatch] = useForm();
+  const x: ILogin = {
+    email: "",
+    password: "",
+  };
+  const {values, errors, handleChange, handleSubmit}= useForm<ILogin>(
+    x,
+    validate
+  );
+  console.log(values);
   const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
@@ -71,34 +82,14 @@ const Register: React.FC = () => {
           >
             <Grid item>
               <TextField
-                label="نام"
-                variant="outlined"
-                sx={{ width: "300px", borderRadius: "8px" }}
-                value={inputs.name.value}
-                error={!inputs.name.isValid}
-                required
-                onChange={(e) =>
-                  dispatch({ type: "NAME", field: e.target.value })
-                }
-                helperText={
-                  !inputs.name.isValid ? " نام وارد شده معتبر نیست" : ""
-                }
-              />
-            </Grid>
-            <Grid item>
-              <TextField
                 label="ایمیل"
                 variant="outlined"
                 sx={{ width: "300px", borderRadius: "8px" }}
-                value={inputs.email.value}
-                error={!inputs.email.isValid}
                 required
-                onChange={(e) =>
-                  dispatch({ type: "EMAIL", field: e.target.value })
-                }
-                helperText={
-                  !inputs.email.isValid ? "ایمیل وارد شده معتبر نیست" : ""
-                }
+                value={values.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
               />
             </Grid>
             <Grid item>
@@ -106,17 +97,11 @@ const Register: React.FC = () => {
                 label="رمز عبور"
                 variant="outlined"
                 sx={{ width: "300px", borderRadius: "8px" }}
-                value={inputs.password.value}
-                error={!inputs.password.isValid}
                 required
-                onChange={(e) =>
-                  dispatch({ type: "PASSWORD", field: e.target.value })
-                }
-                helperText={
-                  !inputs.password.isValid
-                    ? "رمزعبور باید بیشتر از 6 کاراکتر باشد و شامل عدد و حروف فارسی نباشد"
-                    : ""
-                }
+                value={values.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
                 type="password"
               />
             </Grid>
@@ -127,24 +112,20 @@ const Register: React.FC = () => {
                 size="large"
                 color="info"
                 sx={{ width: "300px", borderRadius: "8px" }}
-                disabled={
-                  !inputs.email.isValid ||
-                  !inputs.password.isValid ||
-                  !inputs.name.isValid
-                }
+                disabled={!inputs.email.isValid || !inputs.password.isValid}
                 onClick={() => {
                   setIsPending(true);
-                  AuthService.register({
-                    name: inputs.name.value,
+
+                  AuthService.login({
                     email: inputs.email.value,
                     password: inputs.password.value,
                   })
                     .then((res: any) => {
                       setIsPending(false);
-                      if (res.status == "201") {
+                      if (res.status === 200) {
                         localStorage.setItem("token", res.data.accessToken);
                         authContext.setToken(res.data.accessToken);
-                        toast.success("ثبت نام شما با موفقیت انجام شد!", {
+                        toast.success("با موفقیت وارد شدید!", {
                           position: "top-left",
                           autoClose: 5000,
                           hideProgressBar: false,
@@ -158,9 +139,9 @@ const Register: React.FC = () => {
                         navigate("/");
                       }
                     })
-                    .catch((err: any) => {
+                    .catch(() => {
                       setIsPending(false);
-                      toast.error(err.response.data.message, {
+                      toast.error("نام کاربری یا رمز عبور اشتباه است", {
                         position: "top-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -182,13 +163,15 @@ const Register: React.FC = () => {
                     }}
                   />
                 ) : (
-                  "ثبت نام"
+                  "ورود"
                 )}
               </Button>
             </Grid>
+
             <Grid>
               <Typography>
-                حساب کاربری دارید؟ <NavLink to={"/login"}> وارد شوید</NavLink>
+                حساب کاربری ندارید؟
+                <NavLink to={"/register"}>ثبت نام کنید</NavLink>
               </Typography>
             </Grid>
           </Grid>
@@ -229,4 +212,4 @@ const Register: React.FC = () => {
     </>
   );
 };
-export default Register;
+export default Login;

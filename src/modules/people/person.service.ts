@@ -1,4 +1,4 @@
-import Axios from "../baseUrl";
+import Axios from "../../baseUrl";
 
 const PersonService = {
   getAll(headers: any) {

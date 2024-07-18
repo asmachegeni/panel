@@ -1,8 +1,8 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import DownloadIcon from "@mui/icons-material/Download";
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import swal from "sweetalert";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
@@ -12,6 +12,7 @@ import {
   GridRowModes,
   DataGrid,
   GridColDef,
+  GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
   GridRowId,
@@ -19,11 +20,57 @@ import {
   GridRowEditStopReasons,
   GridSlots,
 } from "@mui/x-data-grid";
-import { DropFile } from "../components/DropFile";
-import { Bounce, ToastContainer } from "react-toastify";
-import FilesService from "../services/files.service";
-import { blue, red } from "@mui/material/colors";
-import { Loader } from "../components/Loader";
+import {
+  randomCreatedDate,
+  randomTraderName,
+  randomId,
+  randomArrayItem,
+} from "@mui/x-data-grid-generator";
+import { useNavigate } from "react-router-dom";
+import { PersonForm } from "./PersonForm";
+
+const roles = ["Market", "Finance", "Development"];
+const randomRole = () => {
+  return randomArrayItem(roles);
+};
+
+const initialRows: GridRowsProp = [
+  {
+    id: randomId(),
+    name: randomTraderName(),
+    age: 25,
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
+  },
+  {
+    id: randomId(),
+    name: randomTraderName(),
+    age: 36,
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
+  },
+  {
+    id: randomId(),
+    name: randomTraderName(),
+    age: 19,
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
+  },
+  {
+    id: randomId(),
+    name: randomTraderName(),
+    age: 28,
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
+  },
+  {
+    id: randomId(),
+    name: randomTraderName(),
+    age: 23,
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
+  },
+];
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -34,39 +81,37 @@ interface EditToolbarProps {
 
 function EditToolbar(props: EditToolbarProps) {
   const { setRows, setRowModesModel } = props;
+
+  const handleClick = () => {
+    const id = randomId();
+    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
+    setRowModesModel((oldModel) => ({
+      ...oldModel,
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
+    }));
+  };
+
+  return (
+    <GridToolbarContainer>
+      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+        اضافه کردن فرد جدید
+      </Button>
+    </GridToolbarContainer>
+  );
 }
 
-export default function Files() {
-  const [rows, setRows] = React.useState([]);
-  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-    {}
-  );
+export default function People() {
+  const [rows, setRows] = React.useState(initialRows);
+  const [pagesize, setPageSize] = React.useState(20);
+  const [lastPage, setLastPage] = React.useState(1);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 5,
   });
-  const [pagesize, setPageSize] = React.useState(20);
-  const [lastPage, setLastPage] = React.useState(1);
-  const [isPending, setIsPending] = React.useState<boolean>(false);
-  const refresh = (pageNumber: number) => {
-    setIsPending(true);
-    FilesService.getAllExcel(pageNumber, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res: any) => {
-      setIsPending(false);
-      setRows(res.data.data.data);
-      setPageSize(res.data.data.per_page);
-      setLastPage(res.data.data.last_page);
-    });
-  };
-  React.useEffect(() => {
-    refresh(1);
-  }, []);
-  React.useEffect(() => {
-    refresh(paginationModel.page + 1);
-  }, [paginationModel]);
+  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
+    {}
+  );
+  const navigate = useNavigate();
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
     event
@@ -85,31 +130,7 @@ export default function Files() {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    swal({
-      title: "آیا از حذف فایل مورد نظر اطمینان دارید؟",
-      icon: "error",
-      dangerMode: true,
-      buttons: ["خیر", "بله"],
-    }).then((value) => {
-      if (value) {
-        FilesService.delete(id as number, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }).then(() => {
-          refresh(1);
-        });
-      }
-    });
-  };
-  const handleDownloadClick = (id: GridRowId) => () => {
-    FilesService.download(id as number, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      document.location.replace(res.data.download_link);
-    });
+    setRows(rows.filter((row) => row.id !== id));
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -118,28 +139,15 @@ export default function Files() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find(
-      (row: { id: string | number }) => row.id === id
-    );
+    const editedRow = rows.find((row) => row.id === id);
     if (editedRow!.isNew) {
-      setRows(rows.filter((row: { id: string | number }) => row.id !== id));
+      setRows(rows.filter((row) => row.id !== id));
     }
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(
-      rows.map((row: { id: string | number }) =>
-        row.id === newRow.id ? updatedRow : row
-      )
-    );
-    FilesService.update(newRow.id as number, newRow, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      refresh(1);
-    });
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
 
@@ -147,13 +155,38 @@ export default function Files() {
     setRowModesModel(newRowModesModel);
   };
 
+  const [open, setOpen] = React.useState(false);
   const columns: GridColDef[] = [
-    { field: "name", headerName: "نام فایل", width: 400, editable: true },
+    { field: "name", headerName: "Name", width: 180, editable: true },
+    {
+      field: "age",
+      headerName: "Age",
+      type: "number",
+      width: 80,
+      align: "left",
+      headerAlign: "left",
+      editable: true,
+    },
+    {
+      field: "joinDate",
+      headerName: "Join date",
+      type: "date",
+      width: 180,
+      editable: true,
+    },
+    {
+      field: "role",
+      headerName: "Department",
+      width: 220,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["Market", "Finance", "Development"],
+    },
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 350,
+      width: 100,
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -168,7 +201,6 @@ export default function Files() {
               }}
               onClick={handleSaveClick(id)}
             />,
-
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
@@ -181,21 +213,15 @@ export default function Files() {
 
         return [
           <GridActionsCellItem
-            icon={<DownloadIcon />}
-            label="Download"
-            className="textPrimary"
-            onClick={handleDownloadClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<EditIcon sx={{ color: blue[900] }} />}
+            icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(id)}
+            // onClick={handleEditClick(id)}
+            onClick={() => setOpen(true)}
             color="inherit"
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon sx={{ color: red[500] }} />}
+            icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
             color="inherit"
@@ -204,33 +230,43 @@ export default function Files() {
       },
     },
   ];
-
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        width: "100%",
-      }}
-    >
-      <Loader open={isPending} handleClose={() => {}} />
-      <ToastContainer
-        position="top-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
+    <>
+      <PersonForm
+        open={open}
+        id={1}
+        isEditMode={true}
+        setOpen={setOpen}
+        refresh={() => {}}
       />
-
-      <DropFile refresh={refresh} />
+      {/* <Box
+        sx={{
+          height: 500,
+          width: "100%",
+          "& .actions": {
+            color: "text.secondary",
+          },
+          "& .textPrimary": {
+            color: "text.primary",
+          },
+        }}
+      >
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slots={{
+            toolbar: EditToolbar as GridSlots["toolbar"],
+          }}
+          slotProps={{
+            toolbar: { setRows, setRowModesModel },
+          }}
+        />
+      </Box> */}
 
       <Box
         component="div"
@@ -264,6 +300,6 @@ export default function Files() {
           rowCount={lastPage * pagesize}
         />
       </Box>
-    </div>
+    </>
   );
 }

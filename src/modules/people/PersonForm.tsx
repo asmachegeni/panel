@@ -1,10 +1,9 @@
 import { CircularProgress, Grid, Modal, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useContext, useEffect, useState } from "react";
-import PersonService from "../services/person.service";
+import { useEffect, useState } from "react";
+import PersonService from "./person.service";
 import { Bounce, toast } from "react-toastify";
-import { HomeContext } from "../pages/Home";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -18,14 +17,17 @@ const style = {
 };
 export const PersonForm = ({
   open,
+  setOpen,
+  refresh,
   id,
   isEditMode,
 }: {
   open: boolean;
+  setOpen: React.Dispatch<any>;
+  refresh: Function;
   id: number;
   isEditMode: boolean;
 }) => {
-  const { setOpen, setMenu, refresh } = useContext(HomeContext);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -130,7 +132,6 @@ export const PersonForm = ({
         }
         setOpen(false);
         setIspending(false);
-        setMenu(null);
         refresh();
       })
       .catch(() => {
