@@ -3,11 +3,10 @@ import {
   CosmographProvider,
   CosmographSearch,
 } from "@cosmograph/react";
-import { graph } from "neo4j-driver";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useEdges } from "reactflow";
 
-export const Home = () => {
+export const GeneralGraph = () => {
+  
   const [nodes, setNodes] = useState(() => {
     let t = [];
     for (let index = 0; index < 10000; index++) {

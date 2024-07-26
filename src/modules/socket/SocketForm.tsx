@@ -2,10 +2,10 @@ import { CircularProgress, Grid, Modal, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import PersonService from "./person.service";
+import PersonService from "./socket.service";
 import { Bounce, toast } from "react-toastify";
 import useForm from "../../hooks/useForm";
-import { IPerson, validate } from "./person.types";
+import { ISocket, validate } from "./socket.types";
 import CloseIcon from "@mui/icons-material/Close";
 
 const style = {
@@ -19,7 +19,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-export const PersonForm = ({
+export const SocketForm = ({
   open,
   setOpen,
   refresh,
@@ -34,13 +34,12 @@ export const PersonForm = ({
 }) => {
   const [isPending, setIspending] = useState(false);
   const [oldData, setOldData] = useState<any>({});
-  const [initial, setInitial] = useState<IPerson>({
-    email: "",
-    name: "",
-    lastname: "",
-    callerId: "",
+  const [initial, setInitial] = useState<ISocket>({
+    socket_number: "",
+    class_of_service: "",
+    ring_time: "",
   });
-  const { values, errors, handleChange } = useForm<IPerson>(initial, validate);
+  const { values, errors, handleChange } = useForm<ISocket>(initial, validate);
   useEffect(() => {
     console.log(id, isEditMode);
     if (id !== -1 && isEditMode) {
@@ -50,30 +49,27 @@ export const PersonForm = ({
         },
       }).then((res: any) => {
         setInitial({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          callerId: res.data.caller_id,
+          socket_number: res.data.socket_number,
+          class_of_service: res.data.class_of_service,
+          ring_time: res.data.ring_time,
         });
         setOldData({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          callerId: res.data.caller_id,
+          socket_number: res.data.socket_number,
+          class_of_service: res.data.class_of_service,
+          ring_time: res.data.ring_time,
         });
       });
     } else {
-      setInitial({ email: "", name: "", lastname: "", callerId: "" });
+      setInitial({ socket_number: "", class_of_service: "", ring_time: "" });
     }
   }, [id, isEditMode]);
   const AddPeople = () => {
     setIspending(true);
     PersonService.add(
       {
-        name: values.name,
-        lastname: values.lastname,
-        email: values.email,
-        caller_id: values.callerId,
+        socket_number: values.socket_number,
+        class_of_service: values.class_of_service,
+        ring_time: values.ring_time,
       },
       {
         headers: {
@@ -84,7 +80,7 @@ export const PersonForm = ({
       .then((res) => {
         if (res.status === 201) {
           setOpen(false);
-          toast.success("فرد جدید با موفقیت اضافه شد", {
+          toast.success("سوکت جدید با موفقیت اضافه شد", {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -106,18 +102,16 @@ export const PersonForm = ({
   };
   const EditPeople = () => {
     let data: any = {};
-    if (oldData.email !== values.email) {
-      data.email = values.email;
+    if (oldData.socket_number !== values.socket_number) {
+      data.socket_number = values.socket_number;
     }
-    if (oldData.name !== values.name) {
-      data.name = values.name;
+    if (oldData.class_of_service !== values.class_of_service) {
+      data.name = values.class_of_service;
     }
-    if (oldData.lastname !== values.lastname) {
-      data.lastname = values.lastname;
+    if (oldData.ring_time !== values.ring_time) {
+      data.ring_time = values.ring_time;
     }
-    if (oldData.callerId !== values.callerId) {
-      data.caller_id = values.callerId;
-    }
+
     setIspending(true);
     PersonService.update(data, 200, {
       headers: {
@@ -126,7 +120,7 @@ export const PersonForm = ({
     })
       .then((res) => {
         if (res.status === 200) {
-          toast.success("فرد  با موفقیت  آپدیت شد", {
+          toast.success("سوکت  با موفقیت  آپدیت شد", {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -166,60 +160,47 @@ export const PersonForm = ({
           </Grid>
           <Grid item>
             <TextField
-              label="نام"
+              label="Socket Number"
               variant="outlined"
               sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.name}
-              name="name"
+              value={values.socket_number}
+              name="socket_number"
               required
               onChange={handleChange}
-              helperText={errors.name}
-              error={!!errors.name}
-              focused={!!values.name}
+              helperText={errors.socket_number}
+              error={!!errors.socket_number}
+              focused={!!values.socket_number}
             />
           </Grid>
           <Grid item>
             <TextField
-              label="نام خانوادگی"
+              label="Class of Servic"
               variant="outlined"
               sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.lastname}
+              value={values.class_of_service}
               required
-              name="lastname"
+              name="class_of_service"
               onChange={handleChange}
-              error={!!errors.lastname}
-              helperText={errors.lastname}
-              focused={!!values.lastname}
+              error={!!errors.class_of_service}
+              helperText={errors.class_of_service}
+              focused={!!values.class_of_service}
             />
           </Grid>
           <Grid item>
             <TextField
-              label="ایمیل"
+              label="Ring Time"
               variant="outlined"
               sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.email}
+              value={values.ring_time}
               required
-              name="email"
+              name="ring_time"
               onChange={handleChange}
-              helperText={errors.email}
-              error={!!errors.email}
-              focused={!!values.email}
+              helperText={errors.ring_time}
+              error={!!errors.ring_time}
+              focused={!!values.ring_time}
             />
           </Grid>
-          <Grid item>
-            <TextField
-              label="caller_ID"
-              variant="outlined"
-              sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.callerId}
-              name="callerId"
-              required
-              onChange={handleChange}
-              helperText={errors.callerId}
-              error={!!errors.callerId}
-              focused={!!values.callerId}
-            />
-          </Grid>
+
           <Grid>
             <Button
               type="submit"
@@ -229,10 +210,9 @@ export const PersonForm = ({
               sx={{ width: "300px", borderRadius: "8px" }}
               disabled={
                 !(
-                  values.email &&
-                  values.name &&
-                  values.lastname &&
-                  values.callerId
+                  values.socket_number &&
+                  values.class_of_service &&
+                  values.ring_time
                 )
               }
               onClick={() => {

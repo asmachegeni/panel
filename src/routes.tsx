@@ -2,10 +2,14 @@ import { ReactNode } from "react";
 import Login from "./modules/login/Login";
 import { RoutePrivate } from "./components/RoutePrivate";
 import Files from "./modules/files/Files";
-import { Home } from "./modules/home/Home";
+import { GeneralGraph } from "./modules/graph/GeneralGraph";
 import AppLayout from "./components/AppLayout";
 import { Setting } from "./modules/setting/Setting";
 import People from "./modules/people/People";
+import Positions from "./modules/positions/Positions";
+import Place from "./modules/place/Place";
+import Socket from "./modules/socket/Socket";
+import NotFound from "./NotFound";
 
 interface Route {
   path: string;
@@ -14,75 +18,63 @@ interface Route {
 const routes: Route[] = [
   {
     path: "/",
-    element: (
-      <RoutePrivate>
-        <Home />
-      </RoutePrivate>
-    ),
+    element: <GeneralGraph />,
   },
   {
     path: "/files",
     element: (
-      <RoutePrivate>
-        <AppLayout>
-          <Files />
-        </AppLayout>
-      </RoutePrivate>
+      <AppLayout>
+        <Files />
+      </AppLayout>
     ),
   },
   {
     path: "/setting",
     element: (
-      <RoutePrivate>
-        <AppLayout>
-          <Setting />
-        </AppLayout>
-      </RoutePrivate>
+      <AppLayout>
+        <Setting />
+      </AppLayout>
     ),
   },
   {
     path: "/people",
     element: (
-      <RoutePrivate>
-        <AppLayout>
-          <People />
-        </AppLayout>
-      </RoutePrivate>
+      <AppLayout>
+        <People />
+      </AppLayout>
     ),
   },
   {
     path: "/sockets",
     element: (
-      <RoutePrivate>
-        <AppLayout>
-          <People />
-        </AppLayout>
-      </RoutePrivate>
+      <AppLayout>
+        <Socket />
+      </AppLayout>
     ),
   },
   {
     path: "/places",
     element: (
-      <RoutePrivate>
-        <AppLayout>
-          <People />
-        </AppLayout>
-      </RoutePrivate>
+      <AppLayout>
+        <Place />
+      </AppLayout>
     ),
   },
   {
     path: "/positions",
     element: (
-      <RoutePrivate>
-        <AppLayout>
-          <People />
-        </AppLayout>
-      </RoutePrivate>
+      <AppLayout>
+        <Positions />
+      </AppLayout>
     ),
   },
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ];
 export default routes;

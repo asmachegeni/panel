@@ -1,8 +1,8 @@
 import Axios from "../../baseUrl";
 
 const PersonService = {
-  getAll(headers: any) {
-    return Axios.get("person", headers);
+  getAll(pagenumbet: number, headers: any) {
+    return Axios.get(`person?page=${pagenumbet}`, headers);
   },
   add(data: any, headers: any) {
     return Axios.post("person", data, headers);

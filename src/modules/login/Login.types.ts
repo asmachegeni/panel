@@ -17,7 +17,7 @@ export const validate = (values: ILogin) => {
   } else if (
     !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(values.email)
   ) {
-    errors.password = "ایمیل وارد شده معتبر نیست";
+    errors.email = "ایمیل وارد شده معتبر نیست";
   }
 
   return errors;

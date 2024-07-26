@@ -1,17 +1,26 @@
 import neo4j, { Integer } from "neo4j-driver";
 
-const uri = "neo4j://localhost:7687";
+const uri = "bolt://localhost:7687";
 const user = "neo4j";
-const password = "password";
+const password = "neo4j";
 
 const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
 
 export const fetchGraphData = async () => {
-  const session = driver.session();
   try {
-    const result = await session.run(
-      "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 10000"
-    );
+    const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
+    const serverInfo = await driver.getServerInfo();
+    console.log(serverInfo);
+  } catch (err) {
+    await driver.close();
+    return;
+  }
+  
+  const session = driver.session();
+  const info = await driver.getServerInfo();
+  console.log(info);
+  try {
+    const result = await session.run("MATCH (n) RETURN");
     const nodes: { id: any; label: any }[] = [];
     const edges: { id: any; source: any; target: any; label: any }[] = [];
 

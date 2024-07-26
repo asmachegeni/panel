@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ValidationFunction<T> = (values: T) => Partial<Record<keyof T, string>>;
 
 const useForm = <T>(initialValues: T, validate: ValidationFunction<T>) => {
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
-
+  useEffect(() => {
+    setValues(initialValues);
+  }, [initialValues]);
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setValues({
       ...values,
       [name]: value,
     });
+    const validationErrors = validate(values);
+    setErrors(validationErrors);
   };
 
   const handleSubmit =
@@ -26,7 +30,7 @@ const useForm = <T>(initialValues: T, validate: ValidationFunction<T>) => {
       }
     };
 
-  return {values, errors, handleChange, handleSubmit};
+  return { values, errors, handleChange, handleSubmit };
 };
 
 export default useForm;

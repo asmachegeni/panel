@@ -11,11 +11,10 @@ import {
   GridActionsCellItem,
   GridSlots,
 } from "@mui/x-data-grid";
-import { PersonForm } from "./PersonForm";
-import PersonService from "./person.service";
+import { PositionsForm } from "./PositionsForm";
+import PositionsService from "./positions.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
-import { fetchGraphData } from "../../neo4j/neo4j";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -36,14 +35,13 @@ function EditToolbar(props: EditToolbarProps) {
           setIseditMode(false);
         }}
       >
-        اضافه کردن فرد جدید
+        اضافه کردن پست جدید
       </Button>
     </GridToolbarContainer>
   );
 }
 
-export default function People() {
-  fetchGraphData();
+export default function Positions() {
   const [rows, setRows] = React.useState([]);
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
@@ -56,39 +54,49 @@ export default function People() {
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    PersonService.getAll(pageNumber, {
+    PositionsService.getAll(pageNumber, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }).then((res) => {
-      setIsPending(false);
-      setRows(
-        res.data.data.map((item: any) => ({
-          id: item.node.id,
-          ...item.node.properties,
-        }))
-      );
+    }).then(
+      (res: {
+        data: {
+          data: {
+            map: (arg0: (item: any) => any) => React.SetStateAction<never[]>;
+          };
+          per_page: React.SetStateAction<number>;
+          last_page: React.SetStateAction<number>;
+        };
+      }) => {
+        setIsPending(false);
+        setRows(
+          res.data.data.map((item: any) => ({
+            id: item.node.id,
+            ...item.node.properties,
+          }))
+        );
 
-      setPageSize(res.data.per_page);
-      setLastPage(res.data.last_page);
-    });
+        setPageSize(res.data.per_page);
+        setLastPage(res.data.last_page);
+      }
+    );
   };
   const handleDelete = (id: number) =>
     swal({
-      title: "آیا از حذف فرد اطمینان دارید؟",
+      title: "آیا از حذف پست اطمینان دارید؟",
       icon: "warning",
       dangerMode: true,
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        PersonService.delete(id, {
+        PositionsService.delete(id, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
           .then((res: any) => {
             if (res.status === 200) {
-              toast.success("فرد  با موفقیت حذف شد", {
+              toast.success("پست  با موفقیت حذف شد", {
                 position: "top-left",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -119,28 +127,15 @@ export default function People() {
     });
   const columns: GridColDef[] = [
     { field: "id", headerName: "id", width: 180 },
-    { field: "caller_id", headerName: "caller_id", width: 180 },
+
     {
-      field: "name",
-      headerName: "name",
-      type: "string",
-      width: 80,
-      align: "left",
-      headerAlign: "left",
-      editable: true,
-    },
-    {
-      field: "lastname",
-      headerName: "lastname",
-      width: 220,
-    },
-    {
-      field: "email",
-      headerName: "email",
+      field: "title",
+      headerName: "title",
       type: "string",
       width: 180,
       editable: true,
     },
+    { field: "caller_id", headerName: "caller_id", width: 180 },
     {
       field: "actions",
       type: "actions",
@@ -176,7 +171,7 @@ export default function People() {
   return (
     <>
       {/* <Loader open={isPending} handleClose={() => {}} /> */}
-      <PersonForm
+      <PositionsForm
         open={open}
         id={0}
         isEditMode={isEditMode}

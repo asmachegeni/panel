@@ -2,10 +2,10 @@ import { CircularProgress, Grid, Modal, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import PersonService from "./person.service";
+import PositionsService from "./positions.service";
 import { Bounce, toast } from "react-toastify";
 import useForm from "../../hooks/useForm";
-import { IPerson, validate } from "./person.types";
+import { IPositions, validate } from "./positions.types";
 import CloseIcon from "@mui/icons-material/Close";
 
 const style = {
@@ -19,7 +19,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-export const PersonForm = ({
+export const PositionsForm = ({
   open,
   setOpen,
   refresh,
@@ -34,46 +34,40 @@ export const PersonForm = ({
 }) => {
   const [isPending, setIspending] = useState(false);
   const [oldData, setOldData] = useState<any>({});
-  const [initial, setInitial] = useState<IPerson>({
-    email: "",
-    name: "",
-    lastname: "",
-    callerId: "",
+  const [initial, setInitial] = useState<IPositions>({
+    title: "",
+    caller_id: "",
   });
-  const { values, errors, handleChange } = useForm<IPerson>(initial, validate);
+  const { values, errors, handleChange } = useForm<IPositions>(
+    initial,
+    validate
+  );
   useEffect(() => {
-    console.log(id, isEditMode);
     if (id !== -1 && isEditMode) {
-      PersonService.get(id, {
+      PositionsService.get(id, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }).then((res: any) => {
         setInitial({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          callerId: res.data.caller_id,
+          title: res.data.title,
+          caller_id: res.data.caller_id,
         });
         setOldData({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          callerId: res.data.caller_id,
+          title: res.data.title,
+          caller_id: res.data.caller_id,
         });
       });
     } else {
-      setInitial({ email: "", name: "", lastname: "", callerId: "" });
+      setInitial({ title: "", caller_id: "" });
     }
   }, [id, isEditMode]);
   const AddPeople = () => {
     setIspending(true);
-    PersonService.add(
+    PositionsService.add(
       {
-        name: values.name,
-        lastname: values.lastname,
-        email: values.email,
-        caller_id: values.callerId,
+        title: values.title,
+        caller_id: values.caller_id,
       },
       {
         headers: {
@@ -81,10 +75,10 @@ export const PersonForm = ({
         },
       }
     )
-      .then((res) => {
+      .then((res: { status: number }) => {
         if (res.status === 201) {
           setOpen(false);
-          toast.success("فرد جدید با موفقیت اضافه شد", {
+          toast.success("پست جدید با موفقیت اضافه شد", {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -106,27 +100,21 @@ export const PersonForm = ({
   };
   const EditPeople = () => {
     let data: any = {};
-    if (oldData.email !== values.email) {
-      data.email = values.email;
+    if (oldData.title !== values.title) {
+      data.title = values.title;
     }
-    if (oldData.name !== values.name) {
-      data.name = values.name;
-    }
-    if (oldData.lastname !== values.lastname) {
-      data.lastname = values.lastname;
-    }
-    if (oldData.callerId !== values.callerId) {
-      data.caller_id = values.callerId;
+    if (oldData.caller_id !== values.caller_id) {
+      data.caller_id = values.caller_id;
     }
     setIspending(true);
-    PersonService.update(data, 200, {
+    PositionsService.update(data, 200, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((res) => {
         if (res.status === 200) {
-          toast.success("فرد  با موفقیت  آپدیت شد", {
+          toast.success("پست  با موفقیت  آپدیت شد", {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -166,44 +154,16 @@ export const PersonForm = ({
           </Grid>
           <Grid item>
             <TextField
-              label="نام"
+              label="عنوان"
               variant="outlined"
               sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.name}
-              name="name"
+              value={values.title}
+              name="title"
               required
               onChange={handleChange}
-              helperText={errors.name}
-              error={!!errors.name}
-              focused={!!values.name}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              label="نام خانوادگی"
-              variant="outlined"
-              sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.lastname}
-              required
-              name="lastname"
-              onChange={handleChange}
-              error={!!errors.lastname}
-              helperText={errors.lastname}
-              focused={!!values.lastname}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              label="ایمیل"
-              variant="outlined"
-              sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.email}
-              required
-              name="email"
-              onChange={handleChange}
-              helperText={errors.email}
-              error={!!errors.email}
-              focused={!!values.email}
+              helperText={errors.title}
+              error={!!errors.title}
+              focused={!!values.title}
             />
           </Grid>
           <Grid item>
@@ -211,13 +171,13 @@ export const PersonForm = ({
               label="caller_ID"
               variant="outlined"
               sx={{ width: "300px", borderRadius: "8px" }}
-              value={values.callerId}
-              name="callerId"
+              value={values.caller_id}
+              name="caller_id"
               required
               onChange={handleChange}
-              helperText={errors.callerId}
-              error={!!errors.callerId}
-              focused={!!values.callerId}
+              helperText={errors.caller_id}
+              error={!!errors.caller_id}
+              focused={!!values.caller_id}
             />
           </Grid>
           <Grid>
@@ -227,14 +187,7 @@ export const PersonForm = ({
               size="large"
               color="info"
               sx={{ width: "300px", borderRadius: "8px" }}
-              disabled={
-                !(
-                  values.email &&
-                  values.name &&
-                  values.lastname &&
-                  values.callerId
-                )
-              }
+              disabled={!(values.title && values.caller_id)}
               onClick={() => {
                 isEditMode ? EditPeople() : AddPeople();
               }}

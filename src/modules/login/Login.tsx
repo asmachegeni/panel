@@ -12,22 +12,23 @@ import useForm from "../../hooks/useForm";
 import AuthService from "./auth.service";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext, useMemo, useState } from "react";
 import AuthContext from "../../contexts/authcontext/authContext";
-import { ILogin, validate } from "./Login.types";
+import { ILogin, validate } from "./login.types";
 
 const Login = () => {
   const theme = useTheme();
-  const x: ILogin = {
-    email: "",
-    password: "",
-  };
-  const {values, errors, handleChange, handleSubmit}= useForm<ILogin>(
-    x,
-    validate
+
+  const initial = useMemo(
+    () => ({
+      email: "",
+      password: "",
+    }),
+    []
   );
-  console.log(values);
+
+  const { values, errors, handleChange } = useForm<ILogin>(initial, validate);
   const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
@@ -90,6 +91,7 @@ const Login = () => {
                 onChange={handleChange}
                 error={!!errors.email}
                 helperText={errors.email}
+                name="email"
               />
             </Grid>
             <Grid item>
@@ -103,6 +105,7 @@ const Login = () => {
                 error={!!errors.password}
                 helperText={errors.password}
                 type="password"
+                name="password"
               />
             </Grid>
             <Grid>
@@ -112,13 +115,13 @@ const Login = () => {
                 size="large"
                 color="info"
                 sx={{ width: "300px", borderRadius: "8px" }}
-                disabled={!inputs.email.isValid || !inputs.password.isValid}
+                disabled={!!errors.password || !!errors.email}
                 onClick={() => {
                   setIsPending(true);
 
                   AuthService.login({
-                    email: inputs.email.value,
-                    password: inputs.password.value,
+                    email: values.email,
+                    password: values.password,
                   })
                     .then((res: any) => {
                       setIsPending(false);
@@ -166,13 +169,6 @@ const Login = () => {
                   "ورود"
                 )}
               </Button>
-            </Grid>
-
-            <Grid>
-              <Typography>
-                حساب کاربری ندارید؟
-                <NavLink to={"/register"}>ثبت نام کنید</NavLink>
-              </Typography>
             </Grid>
           </Grid>
         </Grid>
