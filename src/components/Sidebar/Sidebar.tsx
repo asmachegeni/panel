@@ -1,33 +1,28 @@
 import { NavLink } from "react-router-dom";
 import { SideBarItem } from "./SideBar.types";
-import HomeIcon from "@mui/icons-material/Home";
 import FolderIcon from "@mui/icons-material/Folder";
 import "./Sidebar.css";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import SettingsIcon from "@mui/icons-material/Settings";
-import PeopleIcon from '@mui/icons-material/People';
-import PowerIcon from '@mui/icons-material/Power';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import ChairIcon from '@mui/icons-material/Chair';
+import PeopleIcon from "@mui/icons-material/People";
+import PowerIcon from "@mui/icons-material/Power";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import ChairIcon from "@mui/icons-material/Chair";
 import { useState } from "react";
 import swal from "sweetalert";
 import { Bounce, toast } from "react-toastify";
 import { useContext } from "react";
 import AuthContext from "../../contexts/authcontext/authContext";
 import AuthService from "../../modules/login/auth.service";
+import HubIcon from "@mui/icons-material/Hub";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const authContext = useContext(AuthContext);
 
   const items: SideBarItem[] = [
-    {
-      text: "خانه",
-      icon: <HomeIcon />,
-      link: "/",
-    },
     {
       text: "مدیریت فایل ها",
       icon: <FolderIcon />,
@@ -64,6 +59,12 @@ export const Sidebar = () => {
   return (
     <div className={isOpen ? "sidebar-container" : "sidebar-container_col"}>
       <ul className="sidebar-list">
+        <li className="sidebar-list-item">
+          <NavLink to={"/graph"} className={linkClasss} target="_blank">
+            <HubIcon />
+            {isOpen && <span>{"گراف"}</span>}
+          </NavLink>
+        </li>
         {items.map((item) => (
           <li className="sidebar-list-item" key={item.link}>
             <NavLink to={item.link} className={linkClasss}>

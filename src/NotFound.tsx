@@ -17,10 +17,10 @@ function NotFound() {
       }}
     >
       <img src={img404} width={"750px"} height={"550px"} />
-      <Button variant="contained" color="info" onClick={() => navigate("/")}>
+      {/* <Button variant="contained" color="info" onClick={() => navigate("/")}>
         بازگشت به خانه
         <ArrowBackIcon />
-      </Button>
+      </Button> */}
     </div>
   );
 }

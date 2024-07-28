@@ -7,7 +7,6 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import {
-  GridRowsProp,
   GridRowModesModel,
   GridRowModes,
   DataGrid,
@@ -17,24 +16,12 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-  GridSlots,
 } from "@mui/x-data-grid";
 import { DropFile } from "./DropFile";
 import { Bounce, ToastContainer } from "react-toastify";
 import FilesService from "./files.service";
 import { blue, red } from "@mui/material/colors";
 import { Loader } from "../../components/Loader";
-
-interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
-}
-
-function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-}
 
 export default function Files() {
   const [rows, setRows] = React.useState([]);
@@ -118,10 +105,11 @@ export default function Files() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find(
+    const editedRow: any = rows.find(
       (row: { id: string | number }) => row.id === id
     );
-    if (editedRow!.isNew) {
+
+    if (editedRow?.isNew) {
       setRows(rows.filter((row: { id: string | number }) => row.id !== id));
     }
   };
@@ -253,12 +241,6 @@ export default function Files() {
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar as GridSlots["toolbar"],
-          }}
-          slotProps={{
-            toolbar: { setRows, setRowModesModel },
-          }}
           paginationMode={"server"}
           onPaginationModelChange={setPaginationModel}
           rowCount={lastPage * pagesize}

@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import Login from "./modules/login/Login";
 import { RoutePrivate } from "./components/RoutePrivate";
 import Files from "./modules/files/Files";
-import { GeneralGraph } from "./modules/graph/GeneralGraph";
 import AppLayout from "./components/AppLayout";
 import { Setting } from "./modules/setting/Setting";
 import People from "./modules/people/People";
@@ -10,6 +9,7 @@ import Positions from "./modules/positions/Positions";
 import Place from "./modules/place/Place";
 import Socket from "./modules/socket/Socket";
 import NotFound from "./NotFound";
+import Graph from "./modules/graph/Graph";
 
 interface Route {
   path: string;
@@ -18,7 +18,15 @@ interface Route {
 const routes: Route[] = [
   {
     path: "/",
-    element: <GeneralGraph />,
+    element: (
+      <AppLayout>
+        <Files />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/graph",
+    element: <Graph />,
   },
   {
     path: "/files",

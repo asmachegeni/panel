@@ -1,0 +1,20 @@
+.container {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.green-bg {
+  background-color: #4ade80;
+}
+.blue-bg {
+  background-color: #60a5fa;
+}
+.purple-bg {
+  background-color: #c084fc;
+}
+.orange-bg {
+  background-color: #fdba74;
+}

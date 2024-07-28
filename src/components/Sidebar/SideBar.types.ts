@@ -4,4 +4,5 @@ export interface SideBarItem {
   text: string;
   icon: ReactNode;
   link: string;
+  target?:string
 }
