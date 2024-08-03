@@ -2,50 +2,39 @@ import neo4j, { Integer } from "neo4j-driver";
 
 const uri = "bolt://localhost:7687";
 const user = "neo4j";
-const password = "neo4j";
+const password = "password";
 
 const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
 
 export const fetchGraphData = async () => {
-  try {
-    const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
-    const serverInfo = await driver.getServerInfo();
-    console.log(serverInfo);
-  } catch (err) {
-    await driver.close();
-    return;
-  }
-  
   const session = driver.session();
-  const info = await driver.getServerInfo();
-  console.log(info);
   try {
-    const result = await session.run("MATCH (n) RETURN");
-    const nodes: { id: any; label: any }[] = [];
+    const result = await session.run("MATCH (n) RETURN n");
+    const nodes: { id: any; data: any }[] = [];
     const edges: { id: any; source: any; target: any; label: any }[] = [];
 
     result.records.forEach((record) => {
       const node1 = record.get("n");
-      const node2 = record.get("m");
-      const edge = record.get("r");
+      // const node2 = record.get("m");
+      // const edge = record.get("r");
 
       nodes.push({
         id: node1.identity.toString(),
-        label: node1.properties.name,
-      });
-      nodes.push({
-        id: node2.identity.toString(),
-        label: node2.properties.name,
-      });
-      edges.push({
-        id: edge.identity.toString(),
-        source: node1.identity.toString(),
-        target: node2.identity.toString(),
-        label: edge.type,
+        data: { ...node1.properties, lables: node1.labels },
       });
     });
+    //   nodes.push({
+    //     id: node2.identity.toString(),
+    //     label: node2.properties.name,
+    //   });
+    //   edges.push({
+    //     id: edge.identity.toString(),
+    //     source: node1.identity.toString(),
+    //     target: node2.identity.toString(),
+    //     label: edge.type,
+    //   });
 
-    return { nodes, edges };
+    return nodes;
   } catch (error) {
     console.error("Neo4j query error:", error);
   } finally {

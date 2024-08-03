@@ -5,7 +5,6 @@ import "./Sidebar.css";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import SettingsIcon from "@mui/icons-material/Settings";
 import PeopleIcon from "@mui/icons-material/People";
 import PowerIcon from "@mui/icons-material/Power";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -27,11 +26,6 @@ export const Sidebar = () => {
       text: "مدیریت فایل ها",
       icon: <FolderIcon />,
       link: "/files",
-    },
-    {
-      text: "  تنظیمات",
-      icon: <SettingsIcon />,
-      link: "/setting",
     },
     {
       text: "  افراد",

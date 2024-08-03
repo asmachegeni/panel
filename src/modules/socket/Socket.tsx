@@ -169,7 +169,7 @@ export default function Socket() {
   }, [paginationModel]);
   return (
     <>
-      {/* <Loader open={isPending} handleClose={() => {}} /> */}
+      <Loader open={isPending} handleClose={() => {}} />
       <SocketForm
         open={open}
         id={0}

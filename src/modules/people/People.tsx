@@ -15,7 +15,6 @@ import { PersonForm } from "./PersonForm";
 import PersonService from "./person.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
-import { fetchGraphData } from "../../neo4j/neo4j";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -43,7 +42,6 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export default function People() {
-  fetchGraphData();
   const [rows, setRows] = React.useState([]);
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
@@ -175,7 +173,7 @@ export default function People() {
   }, [paginationModel]);
   return (
     <>
-      {/* <Loader open={isPending} handleClose={() => {}} /> */}
+      <Loader open={isPending} handleClose={() => {}} />
       <PersonForm
         open={open}
         id={0}

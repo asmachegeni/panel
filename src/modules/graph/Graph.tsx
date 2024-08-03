@@ -6,17 +6,22 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { GeneralGraph } from "./GeneralGraph";
 import EditableGraph from "./EditableGraph";
+import { fetchGraphData } from "../../neo4j/neo4j";
 
 const Graph = () => {
   const [value, setValue] = React.useState("1");
-
+  const [nodes, setNodes] = React.useState<any[]>([]);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   React.useEffect(() => {
-    document.title = 'نمایش گراف';
-  }, []);
+    fetchGraphData().then((res) => {
+      // console.log(res);
+      setNodes(res as any[]);
+    });
 
+    document.title = "نمایش گراف";
+  }, []);
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -25,7 +30,6 @@ const Graph = () => {
             onChange={handleChange}
             aria-label="lab API tabs example"
             variant="fullWidth"
-           
           >
             <Tab label="گراف کلی" value="1" />
             <Tab label="ویرایش گراف" value="2" />
@@ -35,7 +39,7 @@ const Graph = () => {
           <GeneralGraph />
         </TabPanel>
         <TabPanel value="2">
-          <EditableGraph />
+          <EditableGraph nodes={nodes as any[]} />
         </TabPanel>
       </TabContext>
     </Box>

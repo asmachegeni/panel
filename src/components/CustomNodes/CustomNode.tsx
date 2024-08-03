@@ -9,25 +9,25 @@ import "./CustomNode.css";
 const CustomNode = (props: NodeProps) => {
   const content = useMemo(() => {
     switch (props.type) {
-      case "post":
+      case "POST":
         return <ChairIcon />;
-      case "place":
+      case "PLACE":
         return <ApartmentIcon />;
-      case "socket":
+      case "SOCKET":
         return <PowerIcon />;
-      case "people":
+      case "PERSON":
         return <PeopleIcon />;
     }
   }, [props.type]);
   const bgClass = useMemo(() => {
     switch (props.type) {
-      case "post":
+      case "POST":
         return " green-bg";
-      case "place":
+      case "PLACE":
         return "blue-bg";
-      case "socket":
+      case "SOCKET":
         return "purple-bg";
-      case "people":
+      case "PERSON":
         return "orange-bg";
     }
   }, [props.type]);

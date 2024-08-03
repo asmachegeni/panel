@@ -175,7 +175,7 @@ export default function Place() {
   }, [paginationModel]);
   return (
     <>
-      {/* <Loader open={isPending} handleClose={() => {}} /> */}
+      <Loader open={isPending} handleClose={() => {}} />
       <PositionsForm
         open={open}
         id={0}

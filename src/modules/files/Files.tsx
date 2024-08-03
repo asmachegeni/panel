@@ -203,7 +203,7 @@ export default function Files() {
         width: "100%",
       }}
     >
-      {/*<Loader open={isPending} handleClose={() => {}} />*/}
+      <Loader open={isPending} handleClose={() => {}} />
       <ToastContainer
         position="top-left"
         autoClose={5000}

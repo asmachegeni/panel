@@ -3,7 +3,6 @@ import Login from "./modules/login/Login";
 import { RoutePrivate } from "./components/RoutePrivate";
 import Files from "./modules/files/Files";
 import AppLayout from "./components/AppLayout";
-import { Setting } from "./modules/setting/Setting";
 import People from "./modules/people/People";
 import Positions from "./modules/positions/Positions";
 import Place from "./modules/place/Place";
@@ -33,14 +32,6 @@ const routes: Route[] = [
     element: (
       <AppLayout>
         <Files />
-      </AppLayout>
-    ),
-  },
-  {
-    path: "/setting",
-    element: (
-      <AppLayout>
-        <Setting />
       </AppLayout>
     ),
   },
