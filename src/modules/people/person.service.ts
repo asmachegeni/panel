@@ -1,20 +1,20 @@
 import Axios from "../../baseUrl";
 
 const PersonService = {
-  getAll(pagenumbet: number, headers: any) {
-    return Axios.get(`person?page=${pagenumbet}`, headers);
+  getAll(pagenumbet: number) {
+    return Axios.get(`person?page=${pagenumbet}`);
   },
-  add(data: any, headers: any) {
-    return Axios.post("person", data, headers);
+  add(data: any) {
+    return Axios.post("person", data);
   },
-  update(data: any, id: number, headers: any) {
-    return Axios.put(`person/${id}`, data, headers);
+  update(data: any, id: number) {
+    return Axios.put(`person/${id}`, data);
   },
-  delete(id: any, headers: any) {
-    return Axios.delete(`person/${id}`, headers);
+  delete(id: any) {
+    return Axios.delete(`person/${id}`);
   },
-  get(id: any, headers: any) {
-    return Axios.get(`person/${id}`, headers);
+  get(id: any) {
+    return Axios.get(`person/${id}`);
   },
 };
 export default PersonService;

@@ -37,11 +37,7 @@ export default function Files() {
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    FilesService.getAllExcel(pageNumber, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res: any) => {
+    FilesService.getAllExcel(pageNumber).then((res: any) => {
       setIsPending(false);
       setRows(res.data.data.data);
       setPageSize(res.data.data.per_page);
@@ -79,22 +75,14 @@ export default function Files() {
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        FilesService.delete(id as number, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }).then(() => {
+        FilesService.delete(id as number).then(() => {
           refresh(1);
         });
       }
     });
   };
   const handleDownloadClick = (id: GridRowId) => () => {
-    FilesService.download(id as number, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
+    FilesService.download(id as number).then((res) => {
       document.location.replace(res.data.download_link);
     });
   };
@@ -121,11 +109,7 @@ export default function Files() {
         row.id === newRow.id ? updatedRow : row
       ) as never[]
     );
-    FilesService.update(newRow.id as number, newRow, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
+    FilesService.update(newRow.id as number, newRow).then((res) => {
       refresh(1);
     });
     return updatedRow;

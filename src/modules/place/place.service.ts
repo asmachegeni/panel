@@ -1,20 +1,20 @@
 import Axios from "../../baseUrl";
 
 const PlaceService = {
-  getAll(pagenumbet: number, headers: any) {
-    return Axios.get(`place?page=${pagenumbet}`, headers);
+  getAll(pagenumbet: number) {
+    return Axios.get(`place?page=${pagenumbet}`);
   },
-  add(data: any, headers: any) {
-    return Axios.post("place", data, headers);
+  add(data: any) {
+    return Axios.post("place", data);
   },
-  update(data: any, id: number, headers: any) {
-    return Axios.patch(`place/${id}`, data, headers);
+  update(data: any, id: number) {
+    return Axios.patch(`place/${id}`, data);
   },
-  delete(id: any, headers: any) {
-    return Axios.delete(`place/${id}`, headers);
+  delete(id: any) {
+    return Axios.delete(`place/${id}`);
   },
-  get(id: any, headers: any) {
-    return Axios.get(`place/${id}`, headers);
+  get(id: any) {
+    return Axios.get(`place/${id}`);
   },
 };
 export default PlaceService;

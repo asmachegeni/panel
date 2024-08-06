@@ -54,11 +54,7 @@ export default function Positions() {
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    PositionsService.getAll(pageNumber, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then(
+    PositionsService.getAll(pageNumber).then(
       (res: {
         data: {
           data: {
@@ -89,11 +85,7 @@ export default function Positions() {
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        PositionsService.delete(id, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        PositionsService.delete(id)
           .then((res: any) => {
             if (res.status === 200) {
               toast.success("پست  با موفقیت حذف شد", {

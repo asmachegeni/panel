@@ -44,11 +44,7 @@ export const PersonForm = ({
   useEffect(() => {
     console.log(id, isEditMode);
     if (id !== -1 && isEditMode) {
-      PersonService.get(id, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }).then((res: any) => {
+      PersonService.get(id).then((res: any) => {
         setInitial({
           name: res.data.name,
           lastname: res.data.lastname,
@@ -68,19 +64,12 @@ export const PersonForm = ({
   }, [id, isEditMode]);
   const AddPeople = () => {
     setIspending(true);
-    PersonService.add(
-      {
-        name: values.name,
-        lastname: values.lastname,
-        email: values.email,
-        caller_id: values.callerId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    )
+    PersonService.add({
+      name: values.name,
+      lastname: values.lastname,
+      email: values.email,
+      caller_id: values.callerId,
+    })
       .then((res) => {
         if (res.status === 201) {
           setOpen(false);
@@ -119,11 +108,7 @@ export const PersonForm = ({
       data.caller_id = values.callerId;
     }
     setIspending(true);
-    PersonService.update(data, 200, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+    PersonService.update(data, 200)
       .then((res) => {
         if (res.status === 200) {
           toast.success("فرد  با موفقیت  آپدیت شد", {

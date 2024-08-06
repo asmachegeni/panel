@@ -5,7 +5,6 @@ import {
   Background,
   applyNodeChanges,
   applyEdgeChanges,
-  NodeChange,
   EdgeChange,
   addEdge,
   reconnectEdge,
@@ -16,30 +15,7 @@ import CustomNode from "../../components/CustomNodes/CustomNode";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Chip } from "@mui/material";
-import GraphService from "./graph.service";
-import { position } from "stylis";
-
-const initialNodes = [
-  {
-    id: "18",
-    data: { label: "Hello" },
-    position: { x: 50, y: 50 },
-    type: "post",
-  },
-  {
-    id: "28",
-    data: { label: "World" },
-    position: { x: 100, y: 100 },
-    type: "socket",
-  },
-
-  {
-    id: "48",
-    data: { label: "gfg" },
-    position: { x: 200, y: 200 },
-    type: "place",
-  },
-];
+import RelationshipService from "./relationship.service";
 
 const initialEdges: any[] | (() => any[]) = [];
 
@@ -78,22 +54,15 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
 
       const s: any = newnodes.filter((item: any) => item.id == params.source);
       const t: any = newnodes.filter((item: any) => item.id == params.target);
-      console.log(s[0]?.type, "----", t[0]?.type);
+      // console.log(s[0]?.type, "----", t[0]?.type);
       const type = [s[0]?.type, t[0]?.type];
       type.sort();
-      console.log(type);
-      // GraphService.add(
-      //   {
-      //     startNode: params.source,
-      //     endNode: params.target,
-      //     relationship: "string", //complete later
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      //     },
-      //   }
-      // );
+      console.log(type.join("HAS"));
+      RelationshipService.add({
+        startNode: params.source,
+        endNode: params.target,
+        relationship: type.sort().join("HAS"), //complete later
+      });
       return setEdges((eds) => addEdge(params, eds));
     },
     [newnodes]
@@ -110,15 +79,25 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
     setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
   }, []);
 
-  const onReconnectEnd = useCallback((_: any, edge: { id: any }) => {
-    console.log("-------------------------- ", edge);
-    // request here
-    if (!edgeReconnectSuccessful.current) {
-      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-    }
+  const onReconnectEnd = useCallback(
+    (
+      _: any,
+      edge: {
+        source(source: any): unknown;
+        id: any;
+      }
+    ) => {
+      console.log("-------------------------- ", nodes);
+      // request here
+      if (!edgeReconnectSuccessful.current) {
+        setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+      }
 
-    edgeReconnectSuccessful.current = true;
-  }, []);
+      // RelationshipService.delete(edge.source, "dd");
+      edgeReconnectSuccessful.current = true;
+    },
+    []
+  );
   const bgTag = useCallback((type: any) => {
     switch (type) {
       case "POST":
@@ -161,12 +140,6 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
         // getOptionDisabled={() => nodes && nodes.length >= 10}
         sx={{ width: "500px" }}
         onChange={(event, value: any) => {
-          // GraphService.get(value[value.length - 1].id, "string", {
-          //   headers: {
-          //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-          //   },
-          // });
-
           setNodes(
             value.map((item: any) => {
               return {

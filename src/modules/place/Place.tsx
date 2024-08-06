@@ -54,11 +54,7 @@ export default function Place() {
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    PlaceService.getAll(pageNumber, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then(
+    PlaceService.getAll(pageNumber).then(
       (res: {
         data: {
           data: {
@@ -89,11 +85,7 @@ export default function Place() {
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        PlaceService.delete(id, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        PlaceService.delete(id)
           .then((res: any) => {
             if (res.status === 200) {
               toast.success("پست  با موفقیت حذف شد", {

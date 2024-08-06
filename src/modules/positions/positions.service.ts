@@ -1,20 +1,20 @@
 import Axios from "../../baseUrl";
 
 const PositionsService = {
-  getAll(pagenumbet: number, headers: any) {
-    return Axios.get(`post?page=${pagenumbet}`, headers);
+  getAll(pagenumbet: number) {
+    return Axios.get(`post?page=${pagenumbet}`);
   },
-  add(data: any, headers: any) {
-    return Axios.post("post", data, headers);
+  add(data: any) {
+    return Axios.post("post", data);
   },
-  update(data: any, id: number, headers: any) {
-    return Axios.put(`post/${id}`, data, headers);
+  update(data: any, id: number) {
+    return Axios.put(`post/${id}`, data);
   },
-  delete(id: any, headers: any) {
-    return Axios.delete(`post/${id}`, headers);
+  delete(id: any) {
+    return Axios.delete(`post/${id}`);
   },
-  get(id: any, headers: any) {
-    return Axios.get(`post/${id}`, headers);
+  get(id: any) {
+    return Axios.get(`post/${id}`);
   },
 };
 export default PositionsService;

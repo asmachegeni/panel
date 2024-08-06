@@ -54,11 +54,7 @@ export default function People() {
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    PersonService.getAll(pageNumber, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
+    PersonService.getAll(pageNumber).then((res) => {
       setIsPending(false);
       setRows(
         res.data.data.map((item: any) => ({
@@ -79,11 +75,7 @@ export default function People() {
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        PersonService.delete(id, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        PersonService.delete(id)
           .then((res: any) => {
             if (res.status === 200) {
               toast.success("فرد  با موفقیت حذف شد", {

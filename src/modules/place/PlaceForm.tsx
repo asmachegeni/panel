@@ -45,11 +45,7 @@ export const PositionsForm = ({
   const { values, errors, handleChange } = useForm<IPlace>(initial, validate);
   useEffect(() => {
     if (id !== -1 && isEditMode) {
-      PositionsService.get(id, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }).then((res: any) => {
+      PositionsService.get(id).then((res: any) => {
         setInitial({
           name: res.data.name,
           caller_id: res.data.caller_id,
@@ -80,21 +76,14 @@ export const PositionsForm = ({
   }, [id, isEditMode]);
   const AddPeople = () => {
     setIspending(true);
-    PositionsService.add(
-      {
-        name: values.name,
-        caller_id: values.caller_id,
-        building: values.building,
-        floor: values.floor,
-        room_number: values.room_number,
-        description: values.description,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    )
+    PositionsService.add({
+      name: values.name,
+      caller_id: values.caller_id,
+      building: values.building,
+      floor: values.floor,
+      room_number: values.room_number,
+      description: values.description,
+    })
       .then((res: { status: number }) => {
         if (res.status === 201) {
           setOpen(false);
@@ -139,11 +128,7 @@ export const PositionsForm = ({
       data.title = values.description;
     }
     setIspending(true);
-    PositionsService.update(data, 200, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+    PositionsService.update(data, 200)
       .then((res) => {
         if (res.status === 200) {
           toast.success("مکان  با موفقیت  آپدیت شد", {

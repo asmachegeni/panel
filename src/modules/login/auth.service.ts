@@ -3,8 +3,8 @@ const AuthService = {
   login(data: any) {
     return Axios.post("auth/signin", data);
   },
-  async logout(headers: any) {
-    return Axios.post("auth/logout", {}, headers);
+  async logout( ) {
+    return Axios.post("auth/logout", {});
   },
 };
 export default AuthService;

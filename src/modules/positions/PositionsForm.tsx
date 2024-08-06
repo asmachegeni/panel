@@ -44,11 +44,7 @@ export const PositionsForm = ({
   );
   useEffect(() => {
     if (id !== -1 && isEditMode) {
-      PositionsService.get(id, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }).then((res: any) => {
+      PositionsService.get(id).then((res: any) => {
         setInitial({
           title: res.data.title,
           caller_id: res.data.caller_id,
@@ -64,17 +60,10 @@ export const PositionsForm = ({
   }, [id, isEditMode]);
   const AddPeople = () => {
     setIspending(true);
-    PositionsService.add(
-      {
-        title: values.title,
-        caller_id: values.caller_id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    )
+    PositionsService.add({
+      title: values.title,
+      caller_id: values.caller_id,
+    })
       .then((res: { status: number }) => {
         if (res.status === 201) {
           setOpen(false);
@@ -107,11 +96,7 @@ export const PositionsForm = ({
       data.caller_id = values.caller_id;
     }
     setIspending(true);
-    PositionsService.update(data, 200, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+    PositionsService.update(data, 200)
       .then((res) => {
         if (res.status === 200) {
           toast.success("پست  با موفقیت  آپدیت شد", {

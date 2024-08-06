@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import FilesService from "./files.service";
-import { Box, Button, LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import styled from "styled-components";
 import Axios from "../../baseUrl";
 const getColor = (props: {

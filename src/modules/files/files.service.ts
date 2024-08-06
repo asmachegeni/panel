@@ -2,11 +2,11 @@ import { Bounce, toast } from "react-toastify";
 import Axios from "../../baseUrl";
 
 const FilesService = {
-  getAllExcel(pageNumber: number, headers: any): Promise<any> {
-    return Axios.get(`excel?page=${pageNumber || 1}`, headers);
+  getAllExcel(pageNumber: number): Promise<any> {
+    return Axios.get(`excel?page=${pageNumber || 1}`);
   },
-  async delete(id: number, headers: any) {
-    return Axios.delete(`excel/${id}`, headers).then((res: any) => {
+  async delete(id: number) {
+    return Axios.delete(`excel/${id}`).then((res: any) => {
       if (res.status === 200) {
         toast.success("ّبا موفقیت حذف شد!", {
           position: "top-left",
@@ -22,8 +22,8 @@ const FilesService = {
       }
     });
   },
-  async update(id: number, data: any, headers: any) {
-    return Axios.put(`excel/${id}`, data, headers).then((res: any) => {
+  async update(id: number, data: any) {
+    return Axios.put(`excel/${id}`, data).then((res: any) => {
       if (res.status === 200) {
         toast.success("با موفقیت آپدیت شد", {
           position: "top-left",
@@ -39,11 +39,11 @@ const FilesService = {
       }
     });
   },
-  async download(id: number, headers: any) {
-    return Axios.get(`excel/${id}`, headers);
+  async download(id: number) {
+    return Axios.get(`excel/${id}`);
   },
-  post(data: any, headers: any) {
-    return Axios.post(`excel`, data, headers);
+  post(data: any) {
+    return Axios.post(`excel`, data);
   },
 };
 
