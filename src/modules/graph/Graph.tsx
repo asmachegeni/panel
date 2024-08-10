@@ -11,13 +11,15 @@ import { fetchGraphData } from "../../neo4j/neo4j";
 const Graph = () => {
   const [value, setValue] = React.useState("1");
   const [nodes, setNodes] = React.useState<any[]>([]);
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const [edges, setEdges] = React.useState<any[]>([]);
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   React.useEffect(() => {
     fetchGraphData().then((res) => {
-      // console.log(res);
-      setNodes(res as any[]);
+      setNodes(res?.nodes as any[]);
+      setEdges(res?.edges as any[]);
     });
 
     document.title = "نمایش گراف";
@@ -36,10 +38,10 @@ const Graph = () => {
           </TabList>
         </Box>
         <TabPanel value="1">
-          <GeneralGraph />
+          <GeneralGraph nodes={nodes as any[]} edges={edges as any[]}/>
         </TabPanel>
         <TabPanel value="2">
-          <EditableGraph nodes={nodes as any[]} />
+          <EditableGraph nodes={nodes as any[]} edges={edges as any[]}/>
         </TabPanel>
       </TabContext>
     </Box>

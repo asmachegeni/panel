@@ -15,7 +15,6 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-
   boxShadow: 24,
   p: 4,
 };
@@ -43,11 +42,7 @@ export const SocketForm = ({
   useEffect(() => {
     console.log(id, isEditMode);
     if (id !== -1 && isEditMode) {
-      PersonService.get(id, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }).then((res: any) => {
+      PersonService.get(id).then((res: any) => {
         setInitial({
           socket_number: res.data.socket_number,
           class_of_service: res.data.class_of_service,
@@ -65,18 +60,11 @@ export const SocketForm = ({
   }, [id, isEditMode]);
   const AddPeople = () => {
     setIspending(true);
-    PersonService.add(
-      {
-        socket_number: values.socket_number,
-        class_of_service: values.class_of_service,
-        ring_time: values.ring_time,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    )
+    PersonService.add({
+      socket_number: values.socket_number,
+      class_of_service: values.class_of_service,
+      ring_time: values.ring_time,
+    })
       .then((res) => {
         if (res.status === 201) {
           setOpen(false);
@@ -98,6 +86,17 @@ export const SocketForm = ({
       })
       .catch(() => {
         setIspending(false);
+        toast.error("خطا در ایجاد سوکت ", {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   const EditPeople = () => {
@@ -113,11 +112,7 @@ export const SocketForm = ({
     }
 
     setIspending(true);
-    PersonService.update(data, 200, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+    PersonService.update(data, 200)
       .then((res) => {
         if (res.status === 200) {
           toast.success("سوکت  با موفقیت  آپدیت شد", {

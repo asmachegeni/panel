@@ -7,9 +7,6 @@ const RelationshipService = {
   add(data: { startNode: number; endNode: number; relationship: string }) {
     return Axios.post("relationship", data);
   },
-  update(data: any, id: number) {
-    return Axios.put(`relationship/${id}`, data);
-  },
   delete(id: any, label: string) {
     return Axios.delete(`relationship/${id}?label=${label}`);
   },

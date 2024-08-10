@@ -9,6 +9,7 @@ import {
   addEdge,
   reconnectEdge,
   Connection,
+  MarkerType,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import CustomNode from "../../components/CustomNodes/CustomNode";
@@ -19,15 +20,27 @@ import RelationshipService from "./relationship.service";
 
 const initialEdges: any[] | (() => any[]) = [];
 
-const EditableGraph = ({ nodes }: { nodes: any[] }) => {
+const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
   const [newnodes, setNodes] = useState([]);
   const [n, setn] = useState<any[]>([]);
+  const [ed, setEdges] = useState(initialEdges);
   useEffect(() => {
     if (nodes.length > 0) {
       setn(nodes as any[]);
+      const newedges = edges.map((item: any) => {
+        return {
+          source: String(item.data.start),
+          target: String(item.data.end),
+          id: item.id,
+          data: { type: item.data.type },
+          markerEnd: {
+            type: MarkerType.Arrow,
+          },
+        };
+      });
+      setEdges(newedges);
     }
-  }, [nodes]);
-  const [edges, setEdges] = useState(initialEdges);
+  }, [nodes, edges]);
   const edgeReconnectSuccessful = useRef(true);
   const nodeTypes = useMemo(
     () => ({
@@ -36,66 +49,6 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
       SOCKET: CustomNode,
       PERSON: CustomNode,
     }),
-    []
-  );
-  const onNodesChange = useCallback(
-    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  );
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange<any>[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  );
-  const onConnect = useCallback(
-    (params: any) => {
-      //request here
-      console.log("on Connect", params);
-
-      const s: any = newnodes.filter((item: any) => item.id == params.source);
-      const t: any = newnodes.filter((item: any) => item.id == params.target);
-      // console.log(s[0]?.type, "----", t[0]?.type);
-      const type = [s[0]?.type, t[0]?.type];
-      type.sort();
-      console.log(type.join("HAS"));
-      RelationshipService.add({
-        startNode: params.source,
-        endNode: params.target,
-        relationship: type.sort().join("HAS"), //complete later
-      });
-      return setEdges((eds) => addEdge(params, eds));
-    },
-    [newnodes]
-  );
-  const onReconnectStart = useCallback(() => {
-    edgeReconnectSuccessful.current = false;
-  }, []);
-
-  const onReconnect = useCallback((oldEdge: any, newConnection: Connection) => {
-    console.log(oldEdge);
-    console.log("*********************");
-    console.log(newConnection);
-    edgeReconnectSuccessful.current = true;
-    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
-  }, []);
-
-  const onReconnectEnd = useCallback(
-    (
-      _: any,
-      edge: {
-        source(source: any): unknown;
-        id: any;
-      }
-    ) => {
-      console.log("-------------------------- ", nodes);
-      // request here
-      if (!edgeReconnectSuccessful.current) {
-        setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-      }
-
-      // RelationshipService.delete(edge.source, "dd");
-      edgeReconnectSuccessful.current = true;
-    },
     []
   );
   const bgTag = useCallback((type: any) => {
@@ -110,6 +63,53 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
         return "#fdba74";
     }
   }, []);
+  const onNodesChange = useCallback(
+    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange<any>[]) =>
+      setEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  );
+  const onConnect = useCallback(
+    (params: any) => {
+      const t: any = newnodes.filter((item: any) => item.id == params.target);
+      RelationshipService.add({
+        startNode: params.source,
+        endNode: params.target,
+        relationship: `HAS${t[0]?.type}`,
+      }).then((res) => console.log("########################## ", res));
+      return setEdges((eds) => addEdge(params, eds));
+    },
+    [newnodes]
+  );
+  const onReconnectStart = useCallback(() => {
+    edgeReconnectSuccessful.current = false;
+  }, []);
+  const onReconnect = useCallback((oldEdge: any, newConnection: Connection) => {
+    edgeReconnectSuccessful.current = true;
+    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
+  }, []);
+  const onReconnectEnd = useCallback(
+    (
+      _: any,
+      edge: {
+        data: any;
+        source(source: any): unknown;
+        id: any;
+      }
+    ) => {
+      if (!edgeReconnectSuccessful.current) {
+        setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+      }
+      console.log(edge);
+      RelationshipService.delete(edge.id, edge?.data?.type);
+      edgeReconnectSuccessful.current = true;
+    },
+    []
+  );
+
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Autocomplete
@@ -117,7 +117,9 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
         limitTags={2}
         id="multiple-limit-tags"
         options={n as any}
-        getOptionLabel={(option: any) => option.data.name || option.data.title}
+        getOptionLabel={(option: any) =>
+          option.data.name || option.data.title || option.data.class_of_service
+        }
         defaultValue={[]}
         renderInput={(params) => (
           <TextField {...params} label="limitTags" placeholder="Favorites" />
@@ -137,9 +139,9 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
             />
           ));
         }}
-        // getOptionDisabled={() => nodes && nodes.length >= 10}
+        getOptionDisabled={() => nodes && nodes.length >= 10}
         sx={{ width: "500px" }}
-        onChange={(event, value: any) => {
+        onChange={(_event, value: any) => {
           setNodes(
             value.map((item: any) => {
               return {
@@ -154,7 +156,7 @@ const EditableGraph = ({ nodes }: { nodes: any[] }) => {
       <ReactFlow
         nodes={newnodes}
         onNodesChange={onNodesChange}
-        edges={edges}
+        edges={ed}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onReconnect={onReconnect}

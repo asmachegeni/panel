@@ -85,6 +85,17 @@ export const PositionsForm = ({
       })
       .catch(() => {
         setIspending(false);
+        toast.error("خطا در ایجاد `پست` ", {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   const EditPeople = () => {

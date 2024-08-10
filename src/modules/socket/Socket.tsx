@@ -56,11 +56,7 @@ export default function Socket() {
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    SocketService.getAll(pageNumber, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
+    SocketService.getAll(pageNumber).then((res) => {
       setIsPending(false);
       setRows(
         res.data.data.map((item: any) => ({
@@ -81,11 +77,7 @@ export default function Socket() {
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        SocketService.delete(id, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        SocketService.delete(id)
           .then((res: any) => {
             if (res.status === 200) {
               toast.success("سوکت  با موفقیت حذف شد", {

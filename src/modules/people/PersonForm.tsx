@@ -72,6 +72,7 @@ export const PersonForm = ({
     })
       .then((res) => {
         if (res.status === 201) {
+          setIspending(false);
           setOpen(false);
           toast.success("فرد جدید با موفقیت اضافه شد", {
             position: "top-left",
@@ -86,11 +87,21 @@ export const PersonForm = ({
           });
         }
         setOpen(false);
-        setIspending(false);
         refresh(1);
       })
       .catch(() => {
         setIspending(false);
+        toast.error("خطا در ایجاد فرد ", {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   const EditPeople = () => {
