@@ -16,6 +16,7 @@ import PersonService from "./person.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
 import useTitle from "../../hooks/useTitle";
+import { blue, red } from "@mui/material/colors";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -144,6 +145,7 @@ export default function People() {
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
+            sx={{ color: blue[900] }}
             className="textPrimary"
             onClick={() => {
               setOpen(true);
@@ -155,6 +157,7 @@ export default function People() {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDelete(id as number)}
+            sx={{ color: red[500] }}
             color="inherit"
           />,
         ];

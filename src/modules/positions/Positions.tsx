@@ -16,6 +16,7 @@ import PositionsService from "./positions.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
 import useTitle from "../../hooks/useTitle";
+import { blue, red } from "@mui/material/colors";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -146,12 +147,14 @@ export default function Positions() {
               setIseditMode(true);
             }}
             color="inherit"
+            sx={{ color: blue[900] }}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDelete(id as number)}
             color="inherit"
+            sx={{ color: red[500] }}
           />,
         ];
       },

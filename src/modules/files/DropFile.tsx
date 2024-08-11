@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { LinearProgress } from "@mui/material";
 import styled from "styled-components";
 import Axios from "../../baseUrl";
+import CloseIcon from "@mui/icons-material/Close";
 const getColor = (props: {
   isDragAccept: any;
   isDragReject: any;
@@ -35,6 +36,7 @@ const Container = styled.div`
   transition: border 0.24s ease-in-out;
   width: 750px;
 `;
+const controller = new AbortController();
 export const DropFile = ({ refresh }: { refresh: any }) => {
   const {
     acceptedFiles,
@@ -62,6 +64,7 @@ export const DropFile = ({ refresh }: { refresh: any }) => {
           onUploadProgress(progressEvent) {
             setProgress(progressEvent.progress as number);
           },
+          signal: controller.signal,
         }
       ).then((res) => {
         if (res.status === 201) {
@@ -85,6 +88,15 @@ export const DropFile = ({ refresh }: { refresh: any }) => {
               value={progress}
             />
             <span>{`${progress}%`}</span>
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                controller.abort();
+                setIsupload(false);
+              }}
+            >
+              <CloseIcon />
+            </div>
           </div>
         </div>
       ) : (

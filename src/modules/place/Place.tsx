@@ -16,6 +16,7 @@ import PlaceService from "./place.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
 import useTitle from "../../hooks/useTitle";
+import { blue, red } from "@mui/material/colors";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -37,7 +38,7 @@ function EditToolbar(props: EditToolbarProps) {
           setIseditMode(false);
         }}
       >
-        اضافه کردن  فضا جدید
+        اضافه کردن فضا جدید
       </Button>
     </GridToolbarContainer>
   );
@@ -151,6 +152,7 @@ export default function Place() {
               setOpen(true);
               setIseditMode(true);
             }}
+            sx={{ color: blue[900] }}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -158,6 +160,7 @@ export default function Place() {
             label="Delete"
             onClick={() => handleDelete(id as number)}
             color="inherit"
+            sx={{ color: red[500] }}
           />,
         ];
       },

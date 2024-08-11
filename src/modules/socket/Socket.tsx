@@ -17,6 +17,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
 import { fetchGraphData } from "../../neo4j/neo4j";
 import useTitle from "../../hooks/useTitle";
+import { blue, red } from "@mui/material/colors";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -145,12 +146,14 @@ export default function Socket() {
               setIseditMode(true);
             }}
             color="inherit"
+            sx={{ color: blue[900] }}
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDelete(id as number)}
             color="inherit"
+            sx={{ color: red[500] }}
           />,
         ];
       },
