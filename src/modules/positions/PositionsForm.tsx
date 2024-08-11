@@ -84,7 +84,7 @@ export const PositionsForm = ({
         refresh(1);
       })
       .catch((res) => {
-        console.log(res);
+       
         setIspending(false);
         toast.error(res.response.data.message, {
           position: "top-left",

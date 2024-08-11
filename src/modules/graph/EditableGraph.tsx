@@ -79,7 +79,7 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
         startNode: params.source,
         endNode: params.target,
         relationship: `HAS${t[0]?.type}`,
-      }).then((res) => console.log("########################## ", res));
+      }).then((res) => {});
       return setEdges((eds) => addEdge(params, eds));
     },
     [newnodes]
@@ -103,7 +103,7 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
       if (!edgeReconnectSuccessful.current) {
         setEdges((eds) => eds.filter((e) => e.id !== edge.id));
       }
-      console.log(edge);
+
       RelationshipService.delete(edge.id, edge?.data?.type);
       edgeReconnectSuccessful.current = true;
     },

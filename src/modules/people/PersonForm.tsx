@@ -42,7 +42,7 @@ export const PersonForm = ({
   });
   const { values, errors, handleChange } = useForm<IPerson>(initial, validate);
   useEffect(() => {
-    console.log(id, isEditMode);
+
     if (id !== -1 && isEditMode) {
       PersonService.get(id).then((res: any) => {
         setInitial({
@@ -142,10 +142,6 @@ export const PersonForm = ({
         setIspending(false);
       });
   };
-  console.log(
-    errors.email && errors.name && errors.lastname && errors.callerId
-  );
-  console.log(errors);
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <Box sx={style}>

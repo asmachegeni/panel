@@ -7,7 +7,6 @@ const password = "password";
 const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
 
 export const fetchGraphData = async () => {
-  console.log("her");
   const session = driver.session();
   try {
     const nodeWithRelation = await session.run(
@@ -46,7 +45,7 @@ export const fetchGraphData = async () => {
         data: { ...s.properties, lables: s.labels },
       });
     });
-    console.log(edges);
+
     return { nodes, edges };
   } catch (error) {
     console.error("Neo4j query error:", error);

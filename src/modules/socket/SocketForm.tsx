@@ -40,7 +40,7 @@ export const SocketForm = ({
   });
   const { values, errors, handleChange } = useForm<ISocket>(initial, validate);
   useEffect(() => {
-    console.log(id, isEditMode);
+
     if (id !== -1 && isEditMode) {
       PersonService.get(id).then((res: any) => {
         setInitial({

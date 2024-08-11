@@ -31,7 +31,7 @@ const CustomNode = (props: NodeProps) => {
         return "orange-bg";
     }
   }, [props.type]);
-  console.log(props.data);
+
   return (
     <>
       <div className="container">
