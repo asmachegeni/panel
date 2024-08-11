@@ -18,8 +18,11 @@ export const validate = (values: IPerson) => {
   } else if (values.lastname.length > 200) {
     errors.lastname = "نام خانوادگی نباید بیشتر از 200 کاراکتر باشد";
   }
- if (isNaN(Number(values.callerId))) {
+  if (isNaN(Number(values.callerId))) {
     errors.callerId = "caller_id  باید عدد باشد ";
+  }
+  if (Number(values.callerId) < 1000 || Number(values.callerId) > 99999) {
+    errors.callerId = "The caller id field must be between 1000 and 9999.";
   }
   if (!values.email) {
     errors.email = "Email is required";

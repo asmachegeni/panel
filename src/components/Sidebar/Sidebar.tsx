@@ -43,7 +43,7 @@ export const Sidebar = () => {
       link: "/sockets",
     },
     {
-      text: "  مکان ها",
+      text: "   فضا ها",
       icon: <ApartmentIcon />,
       link: "/places",
     },

@@ -33,7 +33,9 @@ export const GeneralGraph = ({
   }, [selected]);
   return (
     <CosmographProvider nodes={n} links={links}>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         <CosmographSearch className="search" />
         <Cosmograph
           linkArrows={true}

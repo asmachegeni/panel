@@ -111,18 +111,21 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
   );
 
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div style={{ height: "78vh", width: "100%", overflowX: "hidden" }}>
       <Autocomplete
         multiple
         limitTags={2}
-        id="multiple-limit-tags"
         options={n as any}
         getOptionLabel={(option: any) =>
           option.data.name || option.data.title || option.data.class_of_service
         }
         defaultValue={[]}
         renderInput={(params) => (
-          <TextField {...params} label="limitTags" placeholder="Favorites" />
+          <TextField
+            {...params}
+            label="انتخاب گره"
+            placeholder="گره مورد نظر را از لیست زیر انتخاب یا جستجو کنید..."
+          />
         )}
         renderTags={(params, getTagProps) => {
           return params.map((item: any, index: any) => (

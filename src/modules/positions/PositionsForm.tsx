@@ -83,9 +83,10 @@ export const PositionsForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
+        console.log(res);
         setIspending(false);
-        toast.error("خطا در ایجاد `پست` ", {
+        toast.error(res.response.data.message, {
           position: "top-left",
           autoClose: 5000,
           hideProgressBar: false,

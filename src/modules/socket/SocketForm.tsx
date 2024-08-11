@@ -84,9 +84,9 @@ export const SocketForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
-        toast.error("خطا در ایجاد سوکت ", {
+        toast.error(res.response.data.message, {
           position: "top-left",
           autoClose: 5000,
           hideProgressBar: false,

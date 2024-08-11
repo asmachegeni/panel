@@ -37,7 +37,7 @@ function EditToolbar(props: EditToolbarProps) {
           setIseditMode(false);
         }}
       >
-        اضافه کردن مکان جدید
+        اضافه کردن  فضا جدید
       </Button>
     </GridToolbarContainer>
   );

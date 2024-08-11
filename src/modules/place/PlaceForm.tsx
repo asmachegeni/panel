@@ -87,7 +87,7 @@ export const PositionsForm = ({
       .then((res: { status: number }) => {
         if (res.status === 201) {
           setOpen(false);
-          toast.success("مکان جدید با موفقیت اضافه شد", {
+          toast.success(" فضا جدید با موفقیت اضافه شد", {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -103,9 +103,9 @@ export const PositionsForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
-        toast.error("خطا در ایجاد مکان ", {
+        toast.error(res.response.data.message, {
           position: "top-left",
           autoClose: 5000,
           hideProgressBar: false,
@@ -142,7 +142,7 @@ export const PositionsForm = ({
     PositionsService.update(data, 200)
       .then((res) => {
         if (res.status === 200) {
-          toast.success("مکان  با موفقیت  آپدیت شد", {
+          toast.success(" فضا  با موفقیت  آپدیت شد", {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -318,13 +318,13 @@ export const PositionsForm = ({
               color="info"
               sx={{ width: "300px", borderRadius: "8px" }}
               disabled={
-                !(
-                  values.name &&
-                  values.caller_id &&
-                  values.building &&
-                  values.floor &&
-                  values.room_number &&
-                  values.description
+                !!(
+                  errors.name &&
+                  errors.caller_id &&
+                  errors.building &&
+                  errors.floor &&
+                  errors.room_number &&
+                  errors.description
                 )
               }
               onClick={() => {

@@ -89,9 +89,9 @@ export const PersonForm = ({
         setOpen(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
-        toast.error("خطا در ایجاد فرد ", {
+        toast.error(res.response.data.message, {
           position: "top-left",
           autoClose: 5000,
           hideProgressBar: false,
@@ -142,6 +142,10 @@ export const PersonForm = ({
         setIspending(false);
       });
   };
+  console.log(
+    errors.email && errors.name && errors.lastname && errors.callerId
+  );
+  console.log(errors);
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <Box sx={style}>
@@ -224,11 +228,11 @@ export const PersonForm = ({
               color="info"
               sx={{ width: "300px", borderRadius: "8px" }}
               disabled={
-                !(
-                  values.email &&
-                  values.name &&
-                  values.lastname &&
-                  values.callerId
+                !!(
+                  errors.email ||
+                  errors.name ||
+                  errors.lastname ||
+                  errors.callerId
                 )
               }
               onClick={() => {

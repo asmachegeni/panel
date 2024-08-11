@@ -8,6 +8,7 @@ import { GeneralGraph } from "./GeneralGraph";
 import EditableGraph from "./EditableGraph";
 import { fetchGraphData } from "../../neo4j/neo4j";
 import useTitle from "../../hooks/useTitle";
+import { Button } from "@mui/material";
 
 const Graph = () => {
   const [value, setValue] = React.useState("1");

@@ -11,6 +11,8 @@ export const validate = (values: IPlace) => {
   if (isNaN(Number(values.caller_id))) {
     errors.caller_id = "caller_id  باید عدد باشد ";
   }
-
+  if (Number(values.caller_id) < 1000 || Number(values.caller_id) > 99999) {
+    errors.caller_id = "The caller id field must be between 1000 and 9999.";
+  }
   return errors;
 };

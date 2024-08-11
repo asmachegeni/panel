@@ -2,8 +2,10 @@ import { Button } from "@mui/material";
 import img404 from "./assets/img/404.svg";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import useTitle from "./hooks/useTitle";
 function NotFound() {
   const navigate = useNavigate();
+  useTitle("صفحه پیدا نشد");
   return (
     <div
       style={{
@@ -17,10 +19,10 @@ function NotFound() {
       }}
     >
       <img src={img404} width={"750px"} height={"550px"} />
-      {/* <Button variant="contained" color="info" onClick={() => navigate("/")}>
+      <Button variant="contained" color="info" onClick={() => navigate("/")}>
         بازگشت به خانه
         <ArrowBackIcon />
-      </Button> */}
+      </Button>
     </div>
   );
 }
