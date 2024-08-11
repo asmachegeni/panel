@@ -16,7 +16,13 @@ export const GeneralGraph = ({
   const [links, setLinks] = useState<any>([]);
   useEffect(() => {
     if (nodes.length > 0) {
-      setNodes(nodes as any[]);
+      const newNode = nodes.map((item) => {
+        return {
+          id: item.id,
+          ...item.data,
+        };
+      });
+      setNodes(newNode as any[]);
       const newedges = edges.map((item: any) => {
         return {
           source: String(item.data.start),
@@ -33,9 +39,7 @@ export const GeneralGraph = ({
   }, [selected]);
   return (
     <CosmographProvider nodes={n} links={links}>
-      <div
-        style={{ display: "flex", flexDirection: "column" }}
-      >
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <CosmographSearch className="search" />
         <Cosmograph
           linkArrows={true}

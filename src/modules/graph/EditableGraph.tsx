@@ -117,7 +117,7 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
         limitTags={2}
         options={n as any}
         getOptionLabel={(option: any) =>
-          option.data.name || option.data.title || option.data.class_of_service
+          option.data.name || option.data.title || option.data.socket_number
         }
         defaultValue={[]}
         renderInput={(params) => (
@@ -137,7 +137,9 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
                 borderRadius: "32px",
               }}
               variant="filled"
-              label={item.data.name || item.data.title}
+              label={
+                item.data.name || item.data.title || item.data.socket_number
+              }
               {...getTagProps({ index })}
             />
           ));

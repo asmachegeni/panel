@@ -31,11 +31,19 @@ const CustomNode = (props: NodeProps) => {
         return "orange-bg";
     }
   }, [props.type]);
+  console.log(props.data);
   return (
     <>
-      <div className={`container ${bgClass}`}>{content}</div>
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+      <div className="container">
+        <p className="title">
+          {props.data.name ||
+            props.data.title ||
+            (props.data.socket_number as any)}
+        </p>
+        <div className={`circle ${bgClass}`}>{content}</div>
+      </div>
+      <Handle type="target" position={Position.Right} />
+      <Handle type="source" position={Position.Left} />
     </>
   );
 };

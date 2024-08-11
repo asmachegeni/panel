@@ -1,10 +1,25 @@
 .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.circle {
   width: 56px;
   height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+}
+.title {
+  font-size: 11px;
+  word-break: break-all;
+  border: dashed 1px #000;
+  padding:0 4px;
+  background-color: #fafafa;
 }
 .green-bg {
   background-color: #4ade80;

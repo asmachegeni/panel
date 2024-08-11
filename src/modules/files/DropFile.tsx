@@ -17,7 +17,7 @@ const getColor = (props: {
   if (props.isFocused) {
     return "#2196f3";
   }
-  return "#eeeeee";
+  return "#0c0f3a";
 };
 const Container = styled.div`
   flex: 1;
@@ -90,7 +90,7 @@ export const DropFile = ({ refresh }: { refresh: any }) => {
       ) : (
         <Container {...getRootProps({ isFocused, isDragAccept, isDragReject })}>
           <input {...getInputProps()} />
-          <p>فایل را انتخاب یا رها کنید</p>
+          <p style={{ color: "#0c0f3a" }}>فایل را انتخاب یا رها کنید</p>
         </Container>
       )}
     </div>
