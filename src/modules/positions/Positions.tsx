@@ -15,6 +15,7 @@ import { PositionsForm } from "./PositionsForm";
 import PositionsService from "./positions.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
+import useTitle from "../../hooks/useTitle";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -156,6 +157,8 @@ export default function Positions() {
       },
     },
   ];
+  useTitle("پست ها");
+
   React.useEffect(() => refresh(1), []);
   React.useEffect(() => {
     refresh(paginationModel.page + 1);

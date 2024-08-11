@@ -15,6 +15,7 @@ import { PersonForm } from "./PersonForm";
 import PersonService from "./person.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
+import useTitle from "../../hooks/useTitle";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -52,6 +53,7 @@ export default function People() {
   });
   const [open, setOpen] = React.useState(false);
   const [isPending, setIsPending] = React.useState<boolean>(false);
+  useTitle("افراد");
   const refresh = (pageNumber: number) => {
     setIsPending(true);
     PersonService.getAll(pageNumber).then((res) => {

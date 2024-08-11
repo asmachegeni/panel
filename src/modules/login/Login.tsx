@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useMemo, useState } from "react";
 import AuthContext from "../../contexts/authcontext/authContext";
 import { ILogin, validate } from "./login.types";
+import useTitle from "../../hooks/useTitle";
 
 const Login = () => {
   const theme = useTheme();
@@ -32,6 +33,7 @@ const Login = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
+  useTitle("ورود");
 
   return (
     <>

@@ -22,6 +22,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import FilesService from "./files.service";
 import { blue, red } from "@mui/material/colors";
 import { Loader } from "../../components/Loader";
+import useTitle from "../../hooks/useTitle";
 
 export default function Files() {
   const [rows, setRows] = React.useState([]);
@@ -35,6 +36,8 @@ export default function Files() {
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
   const [isPending, setIsPending] = React.useState<boolean>(false);
+  useTitle("فایل ها");
+
   const refresh = (pageNumber: number) => {
     setIsPending(true);
     FilesService.getAllExcel(pageNumber).then((res: any) => {

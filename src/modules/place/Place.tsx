@@ -15,6 +15,7 @@ import { PositionsForm } from "./PlaceForm";
 import PlaceService from "./place.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
+import useTitle from "../../hooks/useTitle";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -23,6 +24,7 @@ interface EditToolbarProps {
 
 function EditToolbar(props: EditToolbarProps) {
   const { setOpen, setIseditMode } = props;
+  useTitle("فضا");
 
   return (
     <GridToolbarContainer>

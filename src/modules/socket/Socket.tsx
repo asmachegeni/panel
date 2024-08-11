@@ -16,6 +16,7 @@ import SocketService from "./socket.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
 import { fetchGraphData } from "../../neo4j/neo4j";
+import useTitle from "../../hooks/useTitle";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -43,7 +44,7 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export default function Socket() {
-  fetchGraphData();
+  useTitle("ُسوکت ها");
   const [rows, setRows] = React.useState([]);
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);

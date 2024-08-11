@@ -28,6 +28,11 @@ export const Sidebar = () => {
       link: "/files",
     },
     {
+      text: " گراف",
+      icon: <HubIcon />,
+      link: "/graph",
+    },
+    {
       text: "  افراد",
       icon: <PeopleIcon />,
       link: "/people",
@@ -53,12 +58,6 @@ export const Sidebar = () => {
   return (
     <div className={isOpen ? "sidebar-container" : "sidebar-container_col"}>
       <ul className="sidebar-list">
-        <li className="sidebar-list-item">
-          <NavLink to={"/graph"} className={linkClasss} target="_blank">
-            <HubIcon />
-            {isOpen && <span>{"گراف"}</span>}
-          </NavLink>
-        </li>
         {items.map((item) => (
           <li className="sidebar-list-item" key={item.link}>
             <NavLink to={item.link} className={linkClasss}>
@@ -77,11 +76,7 @@ export const Sidebar = () => {
                 buttons: ["خیر", "بله"],
               }).then((value) => {
                 if (value) {
-                  AuthService.logout({
-                    headers: {
-                      Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                  })
+                  AuthService.logout()
                     .then((res) => {
                       if (res.status === 200) {
                         toast.success("ّبا موفقیت خارج شد", {

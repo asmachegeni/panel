@@ -7,6 +7,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import { GeneralGraph } from "./GeneralGraph";
 import EditableGraph from "./EditableGraph";
 import { fetchGraphData } from "../../neo4j/neo4j";
+import useTitle from "../../hooks/useTitle";
 
 const Graph = () => {
   const [value, setValue] = React.useState("1");
@@ -16,13 +17,12 @@ const Graph = () => {
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  useTitle("نمایش گراف");
   React.useEffect(() => {
     fetchGraphData().then((res) => {
       setNodes(res?.nodes as any[]);
       setEdges(res?.edges as any[]);
     });
-
-    document.title = "نمایش گراف";
   }, []);
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
@@ -38,10 +38,10 @@ const Graph = () => {
           </TabList>
         </Box>
         <TabPanel value="1">
-          <GeneralGraph nodes={nodes as any[]} edges={edges as any[]}/>
+          <GeneralGraph nodes={nodes as any[]} edges={edges as any[]} />
         </TabPanel>
         <TabPanel value="2">
-          <EditableGraph nodes={nodes as any[]} edges={edges as any[]}/>
+          <EditableGraph nodes={nodes as any[]} edges={edges as any[]} />
         </TabPanel>
       </TabContext>
     </Box>
