@@ -112,7 +112,7 @@ export default function Files() {
         row.id === newRow.id ? updatedRow : row
       ) as never[]
     );
-    FilesService.update(newRow.id as number, newRow).then((res) => {
+    FilesService.update(newRow.id as number, newRow).then((_res) => {
       refresh(1);
     });
     return updatedRow;

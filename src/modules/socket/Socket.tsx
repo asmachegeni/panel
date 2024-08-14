@@ -15,9 +15,9 @@ import { SocketForm } from "./SocketForm";
 import SocketService from "./socket.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
-import { fetchGraphData } from "../../neo4j/neo4j";
 import useTitle from "../../hooks/useTitle";
 import { blue, red } from "@mui/material/colors";
+import swal from "sweetalert";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -77,7 +77,7 @@ export default function Socket() {
       icon: "warning",
       dangerMode: true,
       buttons: ["خیر", "بله"],
-    }).then((value) => {
+    }).then((value: any) => {
       if (value) {
         SocketService.delete(id)
           .then((res: any) => {
@@ -111,6 +111,7 @@ export default function Socket() {
           );
       }
     });
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "id", width: 180 },
 

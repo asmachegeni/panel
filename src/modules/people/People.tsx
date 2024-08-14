@@ -17,6 +17,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
 import useTitle from "../../hooks/useTitle";
 import { blue, red } from "@mui/material/colors";
+import swal from "sweetalert";
 
 interface EditToolbarProps {
   setOpen: React.Dispatch<any>;
@@ -76,7 +77,7 @@ export default function People() {
       icon: "warning",
       dangerMode: true,
       buttons: ["خیر", "بله"],
-    }).then((value) => {
+    }).then((value: any) => {
       if (value) {
         PersonService.delete(id)
           .then((res: any) => {
@@ -110,6 +111,7 @@ export default function People() {
           );
       }
     });
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "id", width: 180 },
     { field: "caller_id", headerName: "caller_id", width: 180 },

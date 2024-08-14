@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Login from "./modules/login/Login";
-import { RoutePrivate } from "./components/RoutePrivate";
+// import { RoutePrivate } from "./components/RoutePrivate";
 import Files from "./modules/files/Files";
 import AppLayout from "./components/AppLayout";
 import People from "./modules/people/People";

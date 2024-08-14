@@ -17,6 +17,7 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/Loader";
 import RelationshipService from "./relationship.service";
+import ExportService from "./export.service";
 export const GeneralGraph = ({
   nodes,
   edges,
@@ -68,7 +69,9 @@ export const GeneralGraph = ({
             <Button
               variant="contained"
               color="info"
-              onClick={() =>{}}
+              onClick={() => {
+                ExportService.get();
+              }}
             >
               دانلود فایل خروجی
               <CloudDownloadIcon />
