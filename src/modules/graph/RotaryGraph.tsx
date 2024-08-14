@@ -16,33 +16,41 @@ import CustomNode from "../../components/CustomNodes/CustomNode";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Chip } from "@mui/material";
-import RelationshipService from "./relationship.service";
+import RotaryService from "./rotary.service";
 import { Bounce, toast } from "react-toastify";
 
 const initialEdges: any[] | (() => any[]) = [];
 
-const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
+const RotaryGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
   const [newnodes, setNodes] = useState([]);
   const [n, setn] = useState<any[]>([]);
   const [ed, setEdges] = useState(initialEdges);
+  const edgeReconnectSuccessful = useRef(true);
   useEffect(() => {
     if (nodes.length > 0) {
-      setn(nodes as any[]);
-      const newedges = edges.map((item: any) => {
-        return {
-          source: String(item.data.start),
-          target: String(item.data.end),
-          id: item.id,
-          data: { type: item.data.type },
-          markerEnd: {
-            type: MarkerType.Arrow,
-          },
-        };
-      });
+      const t = nodes.filter(
+        (item: { id: string; data: { lables: any[] } }) => {
+          return (item?.data?.lables[0] as any) === "SOCKET";
+        }
+      );
+
+      setn(t as any[]);
+      const newedges = edges
+        .filter((item) => item.data.type === "ROTARY")
+        .map((item: any) => {
+          return {
+            source: String(item.data.start),
+            target: String(item.data.end),
+            id: item.id,
+            data: { type: item.data.type },
+            markerEnd: {
+              type: MarkerType.Arrow,
+            },
+          };
+        });
       setEdges(newedges);
     }
   }, [nodes, edges]);
-  const edgeReconnectSuccessful = useRef(true);
   const nodeTypes = useMemo(
     () => ({
       POST: CustomNode,
@@ -75,52 +83,13 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
   );
   const onConnect = useCallback(
     (params: any) => {
-      const t: any = newnodes.filter((item: any) => item.id == params.target);
-      const s: any = newnodes.filter((item: any) => item.id == params.source);
-      if (
-        t[0]?.type === s[0]?.type ||
-        (t[0]?.type !== "SOCKET" && s[0]?.type !== "SOCKET")
-      ) {
-        toast.error("بین دو گره انتخاب شده نمی‌توان ارتباط برقرار کرد", {
-          position: "top-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      } else {
-        let relationship = "";
-        if (t[0]?.type === "SOCKET") {
-          relationship = `HAS${s[0]?.type}`;
-        } else if (s[0]?.type === "SOCKET") {
-          relationship = `HAS${t[0]?.type}`;
-        }
-        RelationshipService.add({
-          startNode: params.source,
-          endNode: params.target,
-          relationship: relationship,
-        })
-          .then((res) => {
-            if (res.status === 201) {
-              toast.success("ارتباط جدید با موفقیت ایجاد شد", {
-                position: "top-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-              });
-            }
-          })
-          .catch(() => {
-            toast.error("خطا در ایجاد ارتباط", {
+      RotaryService.add({
+        startNode: params.source,
+        endNode: params.target,
+      })
+        .then((res) => {
+          if (res.status === 201) {
+            toast.success("ارتباط جدید با موفقیت ایجاد شد", {
               position: "top-left",
               autoClose: 5000,
               hideProgressBar: false,
@@ -131,9 +100,23 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
               theme: "light",
               transition: Bounce,
             });
+          }
+
+        })
+        .catch(() => {
+          toast.error("خطا در ایجاد ارتباط", {
+            position: "top-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
           });
-        return setEdges((eds) => addEdge(params, eds));
-      }
+        });
+      return setEdges((eds) => addEdge(params, eds));
     },
     [newnodes]
   );
@@ -157,7 +140,7 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
         setEdges((eds) => eds.filter((e) => e.id !== edge.id));
       }
 
-      RelationshipService.delete(edge.id, edge?.data?.type)
+      RotaryService.delete(edge.id)
         .then((res) => {
           if (res.status === 200) {
             toast.success("ارتباط  با موفقیت حذف شد", {
@@ -204,8 +187,8 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="انتخاب گره"
-            placeholder="گره مورد نظر را از لیست زیر انتخاب یا جستجو کنید..."
+            label="انتخاب سوکت"
+            placeholder="سوکت مورد نظر را از لیست زیر انتخاب یا جستجو کنید..."
           />
         )}
         renderTags={(params, getTagProps) => {
@@ -225,7 +208,6 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
             />
           ));
         }}
-        // getOptionDisabled={() => nodes.length && nodes.length >= 10}
         sx={{ width: "500px" }}
         onChange={(_event, value: any) => {
           setNodes(
@@ -258,4 +240,4 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
   );
 };
 
-export default EditableGraph;
+export default RotaryGraph;
