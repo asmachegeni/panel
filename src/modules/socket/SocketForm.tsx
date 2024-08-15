@@ -40,24 +40,23 @@ export const SocketForm = ({
   });
   const { values, errors, handleChange } = useForm<ISocket>(initial, validate);
   useEffect(() => {
-
-    if (id !== -1 && isEditMode) {
+    if (isEditMode === true) {
       PersonService.get(id).then((res: any) => {
         setInitial({
-          socket_number: res.data.socket_number,
-          class_of_service: res.data.class_of_service,
-          ring_time: res.data.ring_time,
+          socket_number: res.data.result[0].node.properties.socket_number,
+          class_of_service: res.data.result[0].node.properties.class_of_service,
+          ring_time: res.data.result[0].node.properties.ring_time,
         });
         setOldData({
-          socket_number: res.data.socket_number,
-          class_of_service: res.data.class_of_service,
-          ring_time: res.data.ring_time,
+          socket_number: res.data.result[0].node.properties.socket_number,
+          class_of_service: res.data.result[0].node.properties.class_of_service,
+          ring_time: res.data.result[0].node.properties.ring_time,
         });
       });
     } else {
       setInitial({ socket_number: "", class_of_service: "", ring_time: "" });
     }
-  }, [id, isEditMode]);
+  }, [isEditMode]);
   const AddPeople = () => {
     setIspending(true);
     PersonService.add({
@@ -112,7 +111,7 @@ export const SocketForm = ({
     }
 
     setIspending(true);
-    PersonService.update(data, 200)
+    PersonService.update(data, id)
       .then((res) => {
         if (res.status === 200) {
           toast.success("سوکت  با موفقیت  آپدیت شد", {
@@ -131,8 +130,19 @@ export const SocketForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
+        toast.error(res.response.data.message, {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   return (

@@ -35,7 +35,7 @@ function EditToolbar(props: EditToolbarProps) {
         startIcon={<AddIcon />}
         onClick={() => {
           setOpen(true);
-          setIseditMode(false);
+          setIseditMode(0);
         }}
       >
         اضافه کردن فرد جدید
@@ -48,6 +48,7 @@ export default function People() {
   const [rows, setRows] = React.useState([]);
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
+  const [rowId, setId] = React.useState(-1);
   const [isEditMode, setIseditMode] = React.useState(false);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -96,8 +97,8 @@ export default function People() {
               refresh(1);
             }
           })
-          .catch(() =>
-            toast.error("خطا در حذف فرد", {
+          .catch((res) =>
+            toast.error(res.response.data.message, {
               position: "top-left",
               autoClose: 5000,
               hideProgressBar: false,
@@ -151,7 +152,8 @@ export default function People() {
             className="textPrimary"
             onClick={() => {
               setOpen(true);
-              setIseditMode(true);
+              setIseditMode(1);
+              setId(id as any);
             }}
             color="inherit"
           />,
@@ -175,7 +177,7 @@ export default function People() {
       <Loader open={isPending} handleClose={() => {}} />
       <PersonForm
         open={open}
-        id={0}
+        id={rowId}
         isEditMode={isEditMode}
         setOpen={setOpen}
         refresh={refresh}

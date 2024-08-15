@@ -18,7 +18,7 @@ import {
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { DropFile } from "./DropFile";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import FilesService from "./files.service";
 import { blue, red } from "@mui/material/colors";
 import { Loader } from "../../components/Loader";
@@ -40,12 +40,27 @@ export default function Files() {
 
   const refresh = (pageNumber: number) => {
     setIsPending(true);
-    FilesService.getAllExcel(pageNumber).then((res: any) => {
-      setIsPending(false);
-      setRows(res.data.data.data);
-      setPageSize(res.data.data.per_page);
-      setLastPage(res.data.data.last_page);
-    });
+    FilesService.getAllExcel(pageNumber)
+      .then((res: any) => {
+        setIsPending(false);
+        setRows(res.data.data.data);
+        setPageSize(res.data.data.per_page);
+        setLastPage(res.data.data.last_page);
+      })
+      .catch((res) => {
+        setIsPending(false);
+        toast.error(res.response.data.message, {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      });
   };
   React.useEffect(() => {
     refresh(1);
@@ -78,9 +93,24 @@ export default function Files() {
       buttons: ["خیر", "بله"],
     }).then((value) => {
       if (value) {
-        FilesService.delete(id as number).then(() => {
-          refresh(1);
-        });
+        FilesService.delete(id as number)
+          .then(() => {
+            refresh(1);
+          })
+          .catch((res) => {
+            setIsPending(false);
+            toast.error(res.response.data.message, {
+              position: "top-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
+          });
       }
     });
   };

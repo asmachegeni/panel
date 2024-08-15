@@ -30,7 +30,7 @@ export const PersonForm = ({
   setOpen: React.Dispatch<any>;
   refresh: Function;
   id: number;
-  isEditMode: boolean;
+  isEditMode: number;
 }) => {
   const [isPending, setIspending] = useState(false);
   const [oldData, setOldData] = useState<any>({});
@@ -42,26 +42,26 @@ export const PersonForm = ({
   });
   const { values, errors, handleChange } = useForm<IPerson>(initial, validate);
   useEffect(() => {
-
-    if (id !== -1 && isEditMode) {
+    if (isEditMode === 1) {
       PersonService.get(id).then((res: any) => {
         setInitial({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          callerId: res.data.caller_id,
+          name: res.data.result[0].node.properties.name,
+          lastname: res.data.result[0].node.properties.lastname,
+          email: res.data.result[0].node.properties.email,
+          callerId: res.data.result[0].node.properties.caller_id,
         });
         setOldData({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          callerId: res.data.caller_id,
+          name: res.data.result[0].node.properties.name,
+          lastname: res.data.result[0].node.properties.lastname,
+          email: res.data.result[0].node.properties.email,
+          callerId: res.data.result[0].node.properties.caller_id,
         });
       });
     } else {
       setInitial({ email: "", name: "", lastname: "", callerId: "" });
+      setOldData({ email: "", name: "", lastname: "", callerId: "" });
     }
-  }, [id, isEditMode]);
+  }, [isEditMode]);
   const AddPeople = () => {
     setIspending(true);
     PersonService.add({
@@ -119,7 +119,7 @@ export const PersonForm = ({
       data.caller_id = values.callerId;
     }
     setIspending(true);
-    PersonService.update(data, 200)
+    PersonService.update(data, id)
       .then((res) => {
         if (res.status === 200) {
           toast.success("فرد  با موفقیت  آپدیت شد", {
@@ -138,8 +138,19 @@ export const PersonForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
+        toast.error(res.response.data.message, {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   return (

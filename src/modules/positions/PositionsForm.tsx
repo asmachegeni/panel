@@ -43,21 +43,21 @@ export const PositionsForm = ({
     validate
   );
   useEffect(() => {
-    if (id !== -1 && isEditMode) {
+    if (isEditMode === true) {
       PositionsService.get(id).then((res: any) => {
         setInitial({
-          title: res.data.title,
-          caller_id: res.data.caller_id,
+          title: res.data.result[0].node.properties.title,
+          caller_id: res.data.result[0].node.properties.caller_id,
         });
         setOldData({
-          title: res.data.title,
-          caller_id: res.data.caller_id,
+          title: res.data.result[0].node.properties.title,
+          caller_id: res.data.result[0].node.properties.caller_id,
         });
       });
     } else {
       setInitial({ title: "", caller_id: "" });
     }
-  }, [id, isEditMode]);
+  }, [isEditMode]);
   const AddPeople = () => {
     setIspending(true);
     PositionsService.add({
@@ -84,7 +84,6 @@ export const PositionsForm = ({
         refresh(1);
       })
       .catch((res) => {
-       
         setIspending(false);
         toast.error(res.response.data.message, {
           position: "top-left",
@@ -108,7 +107,7 @@ export const PositionsForm = ({
       data.caller_id = values.caller_id;
     }
     setIspending(true);
-    PositionsService.update(data, 200)
+    PositionsService.update(data, id)
       .then((res) => {
         if (res.status === 200) {
           toast.success("پست  با موفقیت  آپدیت شد", {
@@ -127,8 +126,19 @@ export const PositionsForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
+        toast.error(res.response.data.message, {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   return (

@@ -19,7 +19,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-export const PositionsForm = ({
+export const PlaceForm = ({
   open,
   setOpen,
   refresh,
@@ -44,23 +44,23 @@ export const PositionsForm = ({
   });
   const { values, errors, handleChange } = useForm<IPlace>(initial, validate);
   useEffect(() => {
-    if (id !== -1 && isEditMode) {
+    if (isEditMode === true) {
       PositionsService.get(id).then((res: any) => {
         setInitial({
-          name: res.data.name,
-          caller_id: res.data.caller_id,
-          building: res.data.building,
-          floor: res.data.floor,
-          room_number: res.data.room_number,
-          description: res.data.description,
+          name: res.data.result[0].node.properties.name,
+          caller_id: res.data.result[0].node.properties.caller_id,
+          building: res.data.result[0].node.properties.building,
+          floor: res.data.result[0].node.properties.floor,
+          room_number: res.data.result[0].node.properties.room_number,
+          description: res.data.result[0].node.properties.description,
         });
         setOldData({
-          name: res.data.name,
-          caller_id: res.data.caller_id,
-          building: res.data.building,
-          floor: res.data.floor,
-          room_number: res.data.room_number,
-          description: res.data.description,
+          name: res.data.result[0].node.properties.name,
+          caller_id: res.data.result[0].node.properties.caller_id,
+          building: res.data.result[0].node.properties.building,
+          floor: res.data.result[0].node.properties.floor,
+          room_number: res.data.result[0].node.properties.room_number,
+          description: res.data.result[0].node.properties.description,
         });
       });
     } else {
@@ -72,8 +72,16 @@ export const PositionsForm = ({
         room_number: "",
         description: "",
       });
+      setOldData({
+        name: "",
+        caller_id: "",
+        building: "",
+        floor: "",
+        room_number: "",
+        description: "",
+      });
     }
-  }, [id, isEditMode]);
+  }, [isEditMode]);
   const AddPeople = () => {
     setIspending(true);
     PositionsService.add({
@@ -139,7 +147,7 @@ export const PositionsForm = ({
       data.title = values.description;
     }
     setIspending(true);
-    PositionsService.update(data, 200)
+    PositionsService.update(data, id)
       .then((res) => {
         if (res.status === 200) {
           toast.success(" فضا  با موفقیت  آپدیت شد", {
@@ -158,8 +166,19 @@ export const PositionsForm = ({
         setIspending(false);
         refresh(1);
       })
-      .catch(() => {
+      .catch((res) => {
         setIspending(false);
+        toast.error(res.response.data.message, {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   return (
@@ -238,7 +257,6 @@ export const PositionsForm = ({
                 sx={{ width: "300px", borderRadius: "8px" }}
                 value={values.building}
                 name="building"
-                required
                 onChange={handleChange}
                 helperText={errors.building}
                 error={!!errors.building}
@@ -266,7 +284,6 @@ export const PositionsForm = ({
                 sx={{ width: "300px", borderRadius: "8px" }}
                 value={values.floor}
                 name="floor"
-                required
                 onChange={handleChange}
                 helperText={errors.floor}
                 error={!!errors.floor}
@@ -285,7 +302,6 @@ export const PositionsForm = ({
                 sx={{ width: "300px", borderRadius: "8px" }}
                 value={values.room_number}
                 name="room_number"
-                required
                 onChange={handleChange}
                 helperText={errors.room_number}
                 error={!!errors.room_number}
@@ -304,7 +320,6 @@ export const PositionsForm = ({
                 sx={{ width: "300px", borderRadius: "8px" }}
                 value={values.description}
                 name="description"
-                required
                 onChange={handleChange}
                 helperText={errors.description}
                 error={!!errors.description}

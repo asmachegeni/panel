@@ -47,6 +47,7 @@ function EditToolbar(props: EditToolbarProps) {
 export default function Positions() {
   const [rows, setRows] = React.useState([]);
   const [pagesize, setPageSize] = React.useState(20);
+  const [rowId, setId] = React.useState(-1);
   const [lastPage, setLastPage] = React.useState(1);
   const [isEditMode, setIseditMode] = React.useState(false);
   const [paginationModel, setPaginationModel] = React.useState({
@@ -147,6 +148,7 @@ export default function Positions() {
             onClick={() => {
               setOpen(true);
               setIseditMode(true);
+              setId(id as any);
             }}
             color="inherit"
             sx={{ color: blue[900] }}
@@ -173,7 +175,7 @@ export default function Positions() {
       <Loader open={isPending} handleClose={() => {}} />
       <PositionsForm
         open={open}
-        id={0}
+        id={rowId}
         isEditMode={isEditMode}
         setOpen={setOpen}
         refresh={refresh}

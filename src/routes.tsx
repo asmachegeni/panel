@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Login from "./modules/login/Login";
-// import { RoutePrivate } from "./components/RoutePrivate";
+import { RoutePrivate } from "./components/RoutePrivate";
 import Files from "./modules/files/Files";
 import AppLayout from "./components/AppLayout";
 import People from "./modules/people/People";
@@ -18,53 +18,69 @@ const routes: Route[] = [
   {
     path: "/",
     element: (
-      <AppLayout>
-        <Files />
-      </AppLayout>
+      <RoutePrivate>
+        <AppLayout>
+          <Files />
+        </AppLayout>
+      </RoutePrivate>
     ),
   },
   {
     path: "/graph",
-    element: <Graph />,
+    element: (
+      <RoutePrivate>
+        <Graph />
+      </RoutePrivate>
+    ),
   },
   {
     path: "/files",
     element: (
-      <AppLayout>
-        <Files />
-      </AppLayout>
+      <RoutePrivate>
+        <AppLayout>
+          <Files />
+        </AppLayout>
+      </RoutePrivate>
     ),
   },
   {
     path: "/people",
     element: (
-      <AppLayout>
-        <People />
-      </AppLayout>
+      <RoutePrivate>
+        <AppLayout>
+          <People />
+        </AppLayout>
+      </RoutePrivate>
     ),
   },
   {
     path: "/sockets",
     element: (
-      <AppLayout>
-        <Socket />
-      </AppLayout>
+      <RoutePrivate>
+        <AppLayout>
+          <Socket />
+        </AppLayout>
+      </RoutePrivate>
     ),
   },
   {
     path: "/places",
     element: (
-      <AppLayout>
-        <Place />
-      </AppLayout>
+      <RoutePrivate>
+        <AppLayout>
+          <Place />
+        </AppLayout>
+      </RoutePrivate>
     ),
   },
   {
     path: "/positions",
     element: (
-      <AppLayout>
-        <Positions />
-      </AppLayout>
+      <RoutePrivate>
+        <AppLayout>
+          <Positions />
+        </AppLayout>
+      </RoutePrivate>
     ),
   },
   {

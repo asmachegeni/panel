@@ -4,6 +4,7 @@ import { LinearProgress } from "@mui/material";
 import styled from "styled-components";
 import Axios from "../../baseUrl";
 import CloseIcon from "@mui/icons-material/Close";
+import { Bounce, toast } from "react-toastify";
 const getColor = (props: {
   isDragAccept: any;
   isDragReject: any;
@@ -62,17 +63,42 @@ export const DropFile = ({ refresh }: { refresh: any }) => {
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress(progressEvent) {
-            setProgress(progressEvent.progress as number);
+            setProgress(Number(progressEvent.progress) * 100);
           },
           signal: controller.signal,
         }
-      ).then((res) => {
-        if (res.status === 201) {
+      )
+        .then((res) => {
           setIsupload(false);
-          //toast
-          refresh(1);
-        }
-      });
+          if (res.status === 201) {
+            toast.success("فایل با موفقیت بارگذاری شد", {
+              position: "top-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
+            refresh(1);
+          }
+        })
+        .catch((res) => {
+          setIsupload(false);
+          toast.error(res.response.data.message, {
+            position: "top-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        });
     }
   }, [acceptedFiles.length]);
 

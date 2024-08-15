@@ -79,7 +79,7 @@ export const Sidebar = () => {
                   AuthService.logout()
                     .then((res) => {
                       if (res.status === 200) {
-                        toast.success("ّبا موفقیت خارج شد", {
+                        toast.success("با موفقیت خارج شد", {
                           position: "top-left",
                           autoClose: 5000,
                           hideProgressBar: false,

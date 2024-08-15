@@ -101,10 +101,9 @@ const RotaryGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
               transition: Bounce,
             });
           }
-
         })
-        .catch(() => {
-          toast.error("خطا در ایجاد ارتباط", {
+        .catch((res) => {
+          toast.error(res.response.data.message, {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
@@ -156,8 +155,8 @@ const RotaryGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
             });
           }
         })
-        .catch(() => {
-          toast.error("خطا در حذف ارتباط", {
+        .catch((res) => {
+          toast.error(res.response.data.message, {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,

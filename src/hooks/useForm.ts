@@ -35,9 +35,6 @@
 
 // export default useForm;
 
-
-
-
 import { useEffect, useState } from "react";
 
 type ValidationFunction<T> = (values: T) => Partial<Record<keyof T, string>>;

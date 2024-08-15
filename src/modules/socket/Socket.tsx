@@ -47,6 +47,7 @@ function EditToolbar(props: EditToolbarProps) {
 export default function Socket() {
   useTitle("ُسوکت ها");
   const [rows, setRows] = React.useState([]);
+  const [rowId, setId] = React.useState(-1);
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
   const [isEditMode, setIseditMode] = React.useState(false);
@@ -96,8 +97,8 @@ export default function Socket() {
               refresh(1);
             }
           })
-          .catch(() =>
-            toast.error("خطا در حذف سوکت", {
+          .catch((res) =>
+            toast.error(res.response.data.message, {
               position: "top-left",
               autoClose: 5000,
               hideProgressBar: false,
@@ -145,6 +146,7 @@ export default function Socket() {
             onClick={() => {
               setOpen(true);
               setIseditMode(true);
+              setId(id as any);
             }}
             color="inherit"
             sx={{ color: blue[900] }}
@@ -169,7 +171,7 @@ export default function Socket() {
       <Loader open={isPending} handleClose={() => {}} />
       <SocketForm
         open={open}
-        id={0}
+        id={rowId}
         isEditMode={isEditMode}
         setOpen={setOpen}
         refresh={refresh}

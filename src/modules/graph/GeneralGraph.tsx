@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/Loader";
 import RelationshipService from "./relationship.service";
 import ExportService from "./export.service";
+import { Bounce, toast } from "react-toastify";
 export const GeneralGraph = ({
   nodes,
   edges,
@@ -70,7 +71,15 @@ export const GeneralGraph = ({
               variant="contained"
               color="info"
               onClick={() => {
-                ExportService.get();
+                ExportService.get().then((res) => {
+                  const blob = new Blob([res.data]);
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = "extensions.xlsx";
+                  document.body.appendChild(a);
+                  a.click();
+                });
               }}
             >
               دانلود فایل خروجی
@@ -108,7 +117,19 @@ export const GeneralGraph = ({
                     setNodes(newNodes as any[]);
                     setLinks(newEdgs as any[]);
                   })
-                  .catch();
+                  .catch((res) => {
+                    toast.error(res.response.data.message, {
+                      position: "top-left",
+                      autoClose: 5000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "light",
+                      transition: Bounce,
+                    });
+                  });
               }}
             >
               نشان دادن Rotary

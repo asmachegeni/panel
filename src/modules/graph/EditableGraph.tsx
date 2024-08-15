@@ -119,8 +119,8 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
               });
             }
           })
-          .catch(() => {
-            toast.error("خطا در ایجاد ارتباط", {
+          .catch((res) => {
+            toast.error(res.response.data.message, {
               position: "top-left",
               autoClose: 5000,
               hideProgressBar: false,
@@ -173,8 +173,8 @@ const EditableGraph = ({ nodes, edges }: { nodes: any[]; edges: any[] }) => {
             });
           }
         })
-        .catch(() => {
-          toast.error("خطا در حذف ارتباط", {
+        .catch((res) => {
+          toast.error(res.response.data.message, {
             position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,

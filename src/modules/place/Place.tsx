@@ -11,7 +11,7 @@ import {
   GridActionsCellItem,
   GridSlots,
 } from "@mui/x-data-grid";
-import { PositionsForm } from "./PlaceForm";
+import { PlaceForm } from "./PlaceForm";
 import PlaceService from "./place.service";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Loader } from "../../components/Loader";
@@ -47,6 +47,7 @@ function EditToolbar(props: EditToolbarProps) {
 
 export default function Place() {
   const [rows, setRows] = React.useState([]);
+  const [rowId, setId] = React.useState(-1);
   const [pagesize, setPageSize] = React.useState(20);
   const [lastPage, setLastPage] = React.useState(1);
   const [isEditMode, setIseditMode] = React.useState(false);
@@ -106,8 +107,8 @@ export default function Place() {
               refresh(1);
             }
           })
-          .catch(() =>
-            toast.error("خطا در حذف فرد", {
+          .catch((res) =>
+            toast.error(res.response.data.message, {
               position: "top-left",
               autoClose: 5000,
               hideProgressBar: false,
@@ -153,6 +154,7 @@ export default function Place() {
             onClick={() => {
               setOpen(true);
               setIseditMode(true);
+              setId(id as any);
             }}
             sx={{ color: blue[900] }}
             color="inherit"
@@ -175,9 +177,9 @@ export default function Place() {
   return (
     <>
       <Loader open={isPending} handleClose={() => {}} />
-      <PositionsForm
+      <PlaceForm
         open={open}
-        id={0}
+        id={rowId}
         isEditMode={isEditMode}
         setOpen={setOpen}
         refresh={refresh}
